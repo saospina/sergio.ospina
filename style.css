@@ -24,3 +24,6 @@ a {
   height: 100px;
   width: 50%;
 }
+li:hover, li:active {
+  border-bottom: 1px solid lightslategray;
+}
