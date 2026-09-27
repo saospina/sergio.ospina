@@ -1,0 +1,66 @@
+---
+import styles from '../styles/home.module.css';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="The personal website of Antonio Ospina, a front-end developer." />
+    <title>Antonio Ospina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" />
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-V3TGD1L0Z4');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3TGD1L0Z4"></script>
+  </head>
+  <body>
+    <main
+      class={styles.page}
+      style={`--background-image: url('${base}img/home.jpeg')`}
+    >
+      <div class={styles.content}>
+        <header>
+          <h1 class={styles.title}>Antonio Ospina</h1>
+          <hr class={styles.divider} />
+          <p class={styles.intro}>
+            I am a young, enterprising, serious, dynamic man, willing to improve every day. I have a great disposition
+            and capacity for teamwork. I like challenges because I think they strengthen me. I have the ability to adapt
+            to different conditions and environments; integration, flexibility, dynamism and ability to face challenging
+            situations. Currently, I am getting experience as a front-end developer on React JS.
+          </p>
+        </header>
+
+        <nav aria-label="Social media links">
+          <ul class={styles.socialLinks}>
+            <li>
+              <a href="https://www.linkedin.com/in/antonio-ospina/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.2H3V21h3.5V8.2ZM4.7 3A2.1 2.1 0 1 0 4.7 7.2 2.1 2.1 0 0 0 4.7 3ZM21 13.7c0-3.8-2-5.8-4.8-5.8-2.2 0-3.1 1.2-3.7 2v-1.7H9V21h3.5v-6.3c0-1.7.3-3.4 2.5-3.4 2.1 0 2.1 2 2.1 3.5V21H21v-7.3Z" /></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/saospina" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.6-4.6 4.9.4.3.6.9.6 1.8V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z" /></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://medium.com/@sergos0617" target="_blank" rel="noreferrer" aria-label="Medium">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.3 12.3 6.3 15.2 14 17.8 6.3H20v11.4h-3.6V8.9l-3.2 8.8h-1.8L8.2 9v6.7l2 2H4l2-2V8.3l-2-2Z" /></svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </main>
+  </body>
+</html>
