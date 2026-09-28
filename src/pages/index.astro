@@ -1,286 +1,66 @@
 ---
 import styles from '../styles/home.module.css';
 
-const description =
-  'Frontend Tech Lead at EPAM Systems. React, Next.js, and React Native for airline booking and payments.';
-const canonical = new URL(import.meta.env.BASE_URL, Astro.site);
-
-const links = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/antonio-ospina/' },
-  { label: 'GitHub', href: 'https://github.com/saospina' },
-  { label: 'Medium', href: 'https://medium.com/@sergos0617' },
-];
-
-const experience = [
-  {
-    company: 'EPAM Systems',
-    meta: 'Colombia · Mar 2020 – Present',
-    roles: [
-      {
-        title: 'Frontend Tech Lead',
-        period: 'Jan 2026 – Present',
-        points: [
-          'Lead the frontend team for Copa Airlines’ booking and payments platform on React, Redux, and Next.js.',
-          'Set coding standards, run reviews, and manage technical debt across the codebase.',
-          'Mentor developers. Two engineers have grown into senior roles.',
-          'Plan sprints and unblock the team as the technical point of contact.',
-          'Evaluate AI developer tooling, including agentic coding and MCP integrations.',
-        ],
-      },
-      {
-        title: 'Frontend Developer',
-        period: 'Feb 2021 – Jan 2026',
-        points: [
-          'Shipped payment methods in the Copa Airlines booking flow: Uplift, PayPal, PSE, SafetyPay, and card.',
-          'Integrated those providers on React, Redux, and Next.js.',
-          'Reviewed code, guided architecture, and kept the platform scalable as the team grew.',
-        ],
-      },
-      {
-        title: 'Quality Assurance Engineer',
-        period: 'Mar 2020 – Feb 2021',
-        note: 'Joined through S4N, later part of EPAM.',
-        points: [
-          'Built Cypress and Cucumber suites for React applications.',
-          'Worked across the delivery lifecycle, then moved into frontend after leading within the QA group.',
-        ],
-      },
-    ],
-  },
-  {
-    company: 'Yuxi Global',
-    meta: 'Medellín · Nov 2017 – Mar 2020',
-    roles: [
-      {
-        title: 'Quality Assurance Engineer',
-        points: [
-          'Tested Angular frontends and backend services with Postman, Git, SQL, Jira, and TestRail.',
-          'Supported clients including Apex and IQVIA.',
-        ],
-      },
-    ],
-  },
-  {
-    company: 'Tata Consultancy Services',
-    meta: 'Medellín · Jan 2016 – Nov 2017',
-    roles: [
-      {
-        title: 'Quality Assurance Engineer',
-        points: [
-          'Led a certification team for banking systems on IBM applications.',
-          'Worked with SQL, RPG, Jira, and Quality Center.',
-        ],
-      },
-    ],
-  },
-  {
-    company: 'Unisys',
-    meta: 'Rionegro · May 2012 – Jan 2016',
-    roles: [
-      {
-        title: 'Bilingual agent',
-        points: [],
-      },
-    ],
-  },
-];
-
-const skills = [
-  {
-    label: 'Frontend',
-    items: ['React', 'Next.js', 'React Native', 'Redux', 'TypeScript', 'JavaScript'],
-  },
-  {
-    label: 'Quality',
-    items: ['Cypress', 'Cucumber', 'SQL', 'Requirements engineering'],
-  },
-  {
-    label: 'Practice',
-    items: ['Architecture', 'Code review', 'Mentoring', 'Git'],
-  },
-];
-
-const education = [
-  {
-    school: 'Uniremington',
-    credential: 'Engineer’s degree, Systems Engineering',
-    period: '2016',
-  },
-  {
-    school: 'Colombo Americano',
-    credential: 'Teaching English as a Second or Foreign Language',
-    period: '2018 – 2020',
-  },
-];
-
-const certifications = [
-  'Learning the OWASP Top 10',
-  'Foundational JavaScript Security',
-  'OWASP Top 10: Injection and Broken Authentication',
-  'Seguridad web esencial',
-  'React: de cero a experto (Hooks y MERN)',
-];
-
-const person = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Antonio Ospina',
-  jobTitle: 'Frontend Tech Lead',
-  worksFor: { '@type': 'Organization', name: 'EPAM Systems' },
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Medellín',
-    addressRegion: 'Antioquia',
-    addressCountry: 'CO',
-  },
-  url: canonical.href,
-  sameAs: links.map((link) => link.href),
-  knowsLanguage: ['English', 'Spanish'],
-};
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <meta name="theme-color" content="#f3f0ea" />
-    <title>Antonio Ospina · Frontend Tech Lead</title>
-    <link rel="canonical" href={canonical.href} />
-    <meta property="og:title" content="Antonio Ospina" />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="profile" />
-    <meta property="og:url" content={canonical.href} />
-    <meta property="profile:first_name" content="Antonio" />
-    <meta property="profile:last_name" content="Ospina" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="The personal website of Antonio Ospina, a front-end developer." />
+    <title>Antonio Ospina</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-      rel="stylesheet"
-    />
-    <script type="application/ld+json" set:html={JSON.stringify(person)} />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3TGD1L0Z4"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" />
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', 'G-V3TGD1L0Z4');
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3TGD1L0Z4"></script>
   </head>
   <body>
-    <main class={styles.page}>
-      <header class={styles.header}>
-        <div class={styles.headerTop}>
-          <p class={styles.kicker}>Medellín, Colombia</p>
-          <nav aria-label="Profiles">
-            <ul class={styles.social}>
-              {
-                links.map((link) => (
-                  <li>
-                    <a href={link.href} target="_blank" rel="noreferrer noopener">
-                      {link.label}
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </nav>
-        </div>
-        <h1 class={styles.title}>Antonio Ospina</h1>
-        <p class={styles.role}>
-          Frontend Tech Lead <span>at EPAM Systems</span>
-        </p>
-        <p class={styles.stack}>React · Next.js · React Native · TypeScript</p>
-      </header>
+    <main
+      class={styles.page}
+      style={`--background-image: url('${base}img/home.jpeg')`}
+    >
+      <div class={styles.content}>
+        <header>
+          <h1 class={styles.title}>Antonio Ospina</h1>
+          <hr class={styles.divider} />
+          <p class={styles.intro}>
+            I am a young, enterprising, serious, dynamic man, willing to improve every day. I have a great disposition
+            and capacity for teamwork. I like challenges because I think they strengthen me. I have the ability to adapt
+            to different conditions and environments; integration, flexibility, dynamism and ability to face challenging
+            situations. Currently, I am getting experience as a front-end developer on React JS.
+          </p>
+        </header>
 
-      <div class={styles.lede}>
-        <p>
-          I lead the frontend team for Copa Airlines’ booking and payments platform. The work is the
-          product and the decisions around it: architecture, coding standards, reviews, and technical
-          debt.
-        </p>
-        <p>
-          I started in quality assurance, automating tests and certifying banking systems, and I still
-          build with that bias. I work in English and Spanish.
-        </p>
+        <nav aria-label="Social media links">
+          <ul class={styles.socialLinks}>
+            <li>
+              <a href="https://www.linkedin.com/in/antonio-ospina/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.2H3V21h3.5V8.2ZM4.7 3A2.1 2.1 0 1 0 4.7 7.2 2.1 2.1 0 0 0 4.7 3ZM21 13.7c0-3.8-2-5.8-4.8-5.8-2.2 0-3.1 1.2-3.7 2v-1.7H9V21h3.5v-6.3c0-1.7.3-3.4 2.5-3.4 2.1 0 2.1 2 2.1 3.5V21H21v-7.3Z" /></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/saospina" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.6-4.6 4.9.4.3.6.9.6 1.8V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z" /></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://medium.com/@sergos0617" target="_blank" rel="noreferrer" aria-label="Medium">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.3 12.3 6.3 15.2 14 17.8 6.3H20v11.4h-3.6V8.9l-3.2 8.8h-1.8L8.2 9v6.7l2 2H4l2-2V8.3l-2-2Z" /></svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
-
-      <nav class={styles.toc} aria-label="On this page">
-        <a href="#experience">Experience</a>
-        <a href="#skills">Skills</a>
-        <a href="#education">Education</a>
-      </nav>
-
-      <section id="experience" class={styles.section} aria-labelledby="experience-title">
-        <h2 id="experience-title" class={styles.sectionTitle}>Experience</h2>
-        {
-          experience.map((job) => (
-            <article class={styles.company}>
-              <header class={styles.companyHeader}>
-                <h3 class={styles.companyName}>{job.company}</h3>
-                <p class={styles.companyMeta}>{job.meta}</p>
-              </header>
-              {job.roles.map((role) => (
-                <div class={role.period ? styles.role : styles.roleSingle}>
-                  {role.period && <p class={styles.rolePeriod}>{role.period}</p>}
-                  <div>
-                    <h4 class={styles.roleTitle}>{role.title}</h4>
-                    {role.note && <p class={styles.note}>{role.note}</p>}
-                    {role.points.length > 0 && (
-                      <ul class={styles.points}>
-                        {role.points.map((point) => (
-                          <li>{point}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </article>
-          ))
-        }
-      </section>
-
-      <section id="skills" class={styles.section} aria-labelledby="skills-title">
-        <h2 id="skills-title" class={styles.sectionTitle}>Skills</h2>
-        <div class={styles.skillGrid}>
-          {
-            skills.map((group) => (
-              <div>
-                <h3 class={styles.groupLabel}>{group.label}</h3>
-                <ul class={styles.skillList}>
-                  {group.items.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
-        </div>
-      </section>
-
-      <section id="education" class={styles.section} aria-labelledby="education-title">
-        <h2 id="education-title" class={styles.sectionTitle}>Education</h2>
-        <div class={styles.eduList}>
-          {
-            education.map((item) => (
-              <article class={styles.eduItem}>
-                <div>
-                  <h3 class={styles.companyName}>{item.school}</h3>
-                  <p class={styles.note}>{item.credential}</p>
-                </div>
-                <p class={styles.companyMeta}>{item.period}</p>
-              </article>
-            ))
-          }
-        </div>
-        <h3 class={styles.groupLabel}>Certifications</h3>
-        <ul class={styles.certs}>
-          {certifications.map((item) => <li>{item}</li>)}
-        </ul>
-      </section>
     </main>
   </body>
 </html>
