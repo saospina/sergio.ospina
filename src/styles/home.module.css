@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+:global(html) {
+  scroll-behavior: smooth;
+}
+
 :global(html),
 :global(body) {
   margin: 0;
@@ -9,119 +13,315 @@
 }
 
 :global(body) {
-  font-family: 'Raleway', sans-serif;
+  background: #f3f0ea;
+  color: #1c1916;
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:global(::selection) {
+  background: #d5e6e2;
+  color: #1c1916;
 }
 
 .page {
-  min-height: 100vh;
-  color: #fff;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--background-image);
-  background-position: center;
-  background-size: cover;
-  display: grid;
-  place-items: start center;
-  padding: 0 1.5rem;
+  --ink: #1c1916;
+  --muted: #5c564e;
+  --line: #ddd6cc;
+  --accent: #1a4741;
+  width: min(100% - 3rem, 52rem);
+  margin: 0 auto;
+  padding: 4.25rem 0 5rem;
 }
 
-.content {
-  width: min(100%, 960px);
-  text-align: center;
+.headerTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.kicker,
+.companyMeta,
+.rolePeriod,
+.note {
+  color: var(--muted);
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social a,
+.toc a {
+  color: var(--accent);
+  font-weight: 600;
+  text-underline-offset: 0.22em;
+}
+
+.social a {
+  text-decoration-thickness: 1px;
+}
+
+.toc a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.social a:hover,
+.toc a:hover {
+  color: var(--accent);
+}
+
+.page a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .title {
-  margin: 9rem 0 0;
-  font-size: clamp(2.75rem, 8vw, 4.5rem);
-  line-height: 1.1;
-  animation: bounce 1s both;
+  margin: 0.7rem 0 0.45rem;
+  font-family: Newsreader, Georgia, 'Iowan Old Style', serif;
+  font-size: clamp(3rem, 8vw, 4.6rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
 }
 
-.divider {
-  width: 40%;
-  margin: 3rem auto;
-  border: 0;
-  border-top: 1px solid #6c757d;
-  animation: slide-in 1s both;
+.role {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
-.intro {
-  margin: 0 auto;
-  max-width: 58rem;
-  font-size: 1.25rem;
-  line-height: 1.6;
-  animation: fade-in 1s 1s both;
+.role span {
+  color: var(--muted);
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-size: 1.05rem;
+  font-style: normal;
+  font-weight: 400;
 }
 
-.socialLinks {
+.stack {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+  letter-spacing: 0.01em;
+}
+
+.lede {
+  max-width: 40rem;
+  margin-top: 1.75rem;
+}
+
+.lede p {
+  margin: 0;
+}
+
+.lede p + p {
+  margin-top: 0.85rem;
+}
+
+.toc {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin: 3rem 0;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.section {
+  margin-top: 3.25rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.sectionTitle,
+.groupLabel {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.company {
+  padding-top: 1.45rem;
+}
+
+.company + .company {
+  margin-top: 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.companyHeader,
+.eduItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.companyName {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.companyMeta,
+.rolePeriod {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.role,
+.roleSingle {
+  margin-top: 1.05rem;
+}
+
+.role {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 0.35rem 1.25rem;
+}
+
+.roleTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.note {
+  margin: 0.15rem 0 0;
+  font-size: 0.98rem;
+}
+
+.points {
+  margin: 0.45rem 0 0;
   padding: 0;
   list-style: none;
-  animation: flip-in 1s both;
 }
 
-.socialLinks li {
-  border-bottom: 1px solid transparent;
-  transition: border-color 150ms ease;
+.points li,
+.certs li {
+  position: relative;
+  margin-top: 0.35rem;
+  padding-left: 0.95rem;
 }
 
-.socialLinks li:hover,
-.socialLinks li:focus-within {
-  border-color: lightslategray;
+.points li::before,
+.certs li::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 0.38rem;
+  height: 1px;
+  background: var(--accent);
 }
 
-.socialLinks a {
+.skillGrid {
   display: grid;
-  width: 3rem;
-  height: 3rem;
-  place-items: center;
-  color: #fff;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.75rem;
+  margin-top: 1.15rem;
 }
 
-.socialLinks svg {
-  width: 2.5rem;
-  height: 2.5rem;
-  fill: currentColor;
+.skillList,
+.certs {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-@keyframes bounce {
-  0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-  40%, 43% { transform: translateY(-1.5rem); }
-  70% { transform: translateY(-0.75rem); }
-  90% { transform: translateY(-0.25rem); }
+.skillList li {
+  padding: 0.38rem 0;
+  border-bottom: 1px solid var(--line);
 }
 
-@keyframes slide-in {
-  from { transform: translateX(-100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+.eduList {
+  margin-top: 0.35rem;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.eduItem {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
 }
 
-@keyframes flip-in {
-  from { transform: perspective(400px) rotateX(90deg); opacity: 0; }
-  to { transform: perspective(400px) rotateX(0); opacity: 1; }
+.groupLabel {
+  margin-top: 1.75rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 680px) {
   .page {
-    padding: 0 1rem;
+    width: min(100% - 2rem, 52rem);
+    padding-top: 2.75rem;
   }
 
-  .title {
-    margin-top: 5rem;
+  .headerTop,
+  .companyHeader,
+  .eduItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
   }
 
-  .divider {
-    width: 60%;
-    margin: 2rem auto;
+  .role {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
   }
 
-  .intro {
-    font-size: 1rem;
+  .skillGrid {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .companyMeta,
+  .rolePeriod {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html) {
+    scroll-behavior: auto;
+  }
+}
+
+@media print {
+  :global(body),
+  .page {
+    background: #fff;
+    color: #000;
+  }
+
+  .page {
+    width: 100%;
+    padding: 0;
+  }
+
+  .toc {
+    display: none;
+  }
+
+  .social a {
+    color: #000;
   }
 }

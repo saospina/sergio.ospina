@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,16 +16,13 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out merged pull request
+      - name: Check out source
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
