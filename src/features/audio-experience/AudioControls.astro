@@ -1,0 +1,20 @@
+---
+import styles from './audio-controls.module.css';
+import { DEFAULT_VOLUME } from './sources';
+---
+
+<div class={styles.controls} data-audio-controls role="group" aria-label="Audio" hidden>
+  <p class={styles.status} data-audio-status role="status" hidden></p>
+  <label class={styles.volume}>
+    Volume
+    <input
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      value={DEFAULT_VOLUME}
+      data-volume
+    />
+  </label>
+  <button type="button" data-mute aria-pressed="false">Mute</button>
+</div>

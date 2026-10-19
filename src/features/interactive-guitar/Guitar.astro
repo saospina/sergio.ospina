@@ -1,0 +1,82 @@
+---
+import styles from './guitar.module.css';
+import { guitarStrings, initialStringIndex } from './strings';
+
+const bridgePins: readonly number[] = [23.33, 70, 116.67, 163.33, 210, 256.67];
+---
+
+<div class={styles.guitar} data-guitar>
+  <svg
+    class={styles.art}
+    viewBox="0 0 280 360"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g fill="rgba(255,255,255,0.045)" stroke="none">
+      <ellipse cx="140" cy="188" rx="124" ry="48" />
+      <ellipse cx="140" cy="270" rx="132" ry="74" />
+    </g>
+    <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round">
+      <path stroke-width="1.7" d="M34 12h212l16 18v48H18V30L34 12Z" />
+      <g stroke-width="1.45">
+        <circle cx="38" cy="34" r="5.5" />
+        <circle cx="38" cy="52" r="5.5" />
+        <circle cx="38" cy="68" r="5.5" />
+        <circle cx="242" cy="34" r="5.5" />
+        <circle cx="242" cy="52" r="5.5" />
+        <circle cx="242" cy="68" r="5.5" />
+      </g>
+      <line x1="16" y1="78" x2="264" y2="78" stroke-width="2.5" />
+      <rect x="16" y="78" width="248" height="74" stroke-width="1.6" />
+      <g stroke-width="1.05">
+        <line x1="16" y1="94" x2="264" y2="94" />
+        <line x1="16" y1="110" x2="264" y2="110" />
+        <line x1="16" y1="126" x2="264" y2="126" />
+        <line x1="16" y1="140" x2="264" y2="140" />
+      </g>
+      <ellipse cx="140" cy="188" rx="124" ry="48" stroke-width="1.7" />
+      <ellipse cx="140" cy="270" rx="132" ry="74" stroke-width="1.7" />
+      <circle cx="140" cy="262" r="31" stroke-width="1.6" />
+      <circle cx="140" cy="262" r="23" stroke-width="1.05" />
+      <rect x="14" y="301" width="252" height="11" rx="1.5" stroke-width="1.5" />
+      <line x1="20" y1="307" x2="260" y2="307" stroke-width="2.2" />
+    </g>
+    <g fill="currentColor" stroke="none">
+      <circle cx="140" cy="102" r="2.3" />
+      <circle cx="140" cy="133" r="2.3" />
+      {
+        bridgePins.map((pinX) => (
+          <circle cx={pinX} cy="307" r="2.5" />
+        ))
+      }
+    </g>
+  </svg>
+  <div class={styles.strings} role="group" aria-label="Guitar strings">
+    {
+      guitarStrings.map((string) => (
+        <button
+          type="button"
+          id={string.id}
+          class={styles.string}
+          data-guitar-string
+          data-string-index={string.index}
+          aria-controls={string.sectionId}
+          aria-pressed={string.index === initialStringIndex ? 'true' : 'false'}
+        >
+          <span class={styles.label}>{string.label}</span>
+          <svg
+            class={styles.stringSvg}
+            data-string-visual
+            viewBox="0 0 44 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path class={styles.stringLine} data-string-path d="M22 1 Q22 50 22 99" />
+          </svg>
+        </button>
+      ))
+    }
+  </div>
+</div>
