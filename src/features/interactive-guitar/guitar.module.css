@@ -1,0 +1,162 @@
+.guitar {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 280 / 360;
+  max-height: calc(100vh - 6.5rem);
+  max-height: calc(100dvh - 6.5rem);
+  overflow-x: clip;
+  overflow-y: clip;
+  color: rgba(255, 252, 248, 0.92);
+  user-select: none;
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.8));
+}
+
+.strings {
+  position: absolute;
+  /* Nut y=78 and saddle y=307 in viewBox 0 0 280 360. */
+  top: 21.67%;
+  bottom: 14.72%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+}
+
+.string {
+  position: relative;
+  flex: 1 1 0;
+  width: 0;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  appearance: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+
+.stringSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  --pluck-glow: 0px;
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 var(--pluck-glow) rgba(255, 252, 248, 0.95));
+}
+
+.stringLine {
+  stroke: currentColor;
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.string:hover,
+.string:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.string:hover .stringLine,
+.string:focus-visible .stringLine {
+  stroke-width: 2.25px;
+}
+
+.string:focus {
+  outline: none;
+}
+
+.string:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -3px;
+}
+
+.string[aria-pressed='true'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.string[aria-pressed='true'] .stringLine {
+  stroke-width: 3px;
+}
+
+.string:disabled,
+.string[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.35;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.string:disabled .stringLine,
+.string[aria-disabled='true'] .stringLine {
+  stroke-width: 1.5px;
+}
+
+.string[aria-disabled='true']:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.45);
+}
+
+.label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 1024px) {
+  .guitar {
+    width: 100%;
+    height: 11rem;
+    max-height: 11rem;
+    aspect-ratio: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .guitar {
+    height: 9.5rem;
+    max-height: 9.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .string,
+  .stringLine,
+  .stringSvg {
+    transition: none;
+  }
+
+  .stringSvg {
+    --pluck-glow: 0px;
+  }
+}

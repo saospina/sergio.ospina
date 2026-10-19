@@ -1,0 +1,70 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  color: #fff;
+  background: #141210;
+}
+
+.controls[hidden] {
+  display: none;
+}
+
+.status {
+  flex: 1 1 100%;
+  margin: 0;
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.status[hidden] {
+  display: none;
+}
+
+.volume {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.volume input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  accent-color: #fff;
+  cursor: pointer;
+}
+
+.mute {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mute:focus-visible,
+.volume input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mute,
+  .volume input {
+    transition: none;
+  }
+}

@@ -1,0 +1,115 @@
+---
+import {
+  certifications,
+  education,
+  experience,
+  links,
+  sections,
+  skills,
+  type ProfileSection,
+} from './profile';
+import styles from './profile.module.css';
+
+interface Props {
+  active: ProfileSection;
+}
+
+const { active } = Astro.props;
+
+function paragraphs(body: string): string[] {
+  return body.split('\n\n').filter((paragraph) => paragraph.length > 0);
+}
+---
+
+<div id="profile" class={styles.panel} data-profile-panel tabindex="-1">
+  <div class={styles.live} data-section-live aria-live="polite" aria-atomic="true">
+    {active.title}
+  </div>
+  {
+    sections.map((section) => {
+      const isActive = section.id === active.id;
+      return (
+        <article
+          id={section.id}
+          data-section-id={section.id}
+          data-active={isActive ? 'true' : undefined}
+          class:list={[styles.section, section.shortDescription === 'Placeholder' && styles.placeholder]}
+          style={`--section-accent: ${section.accentColor}`}
+          aria-labelledby={`${section.id}-title`}
+          aria-current={isActive ? 'true' : undefined}
+        >
+          <h2 id={`${section.id}-title`} class={styles.title}>
+            {section.title}
+          </h2>
+          <p class={styles.summary}>{section.shortDescription}</p>
+          {paragraphs(section.body).map((paragraph) => (
+            <p class={styles.body}>{paragraph}</p>
+          ))}
+          {section.id === 'skills' && (
+            <div class={styles.groups}>
+              {skills.map((group) => (
+                <div>
+                  <h3 class={styles.groupLabel}>{group.label}</h3>
+                  <ul class={styles.list}>
+                    {group.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+          {section.id === 'experience' && (
+            <div>
+              {experience.map((job) => (
+                <section class={styles.job}>
+                  <h3 class={styles.groupLabel}>{job.company}</h3>
+                  <p class={styles.meta}>{job.meta}</p>
+                  {job.roles.map((role) => (
+                    <div class={styles.role}>
+                      <h4 class={styles.roleTitle}>{role.title}</h4>
+                      {role.period && <p class={styles.meta}>{role.period}</p>}
+                      {role.note && <p class={styles.meta}>{role.note}</p>}
+                      {role.points.length > 0 && (
+                        <ul class={styles.list}>
+                          {role.points.map((point) => (
+                            <li>{point}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </section>
+              ))}
+              <h3 class={styles.groupLabel}>Education</h3>
+              {education.map((item) => (
+                <div class={styles.role}>
+                  <h4 class={styles.roleTitle}>{item.school}</h4>
+                  <p class={styles.meta}>{item.credential}</p>
+                  <p class={styles.meta}>{item.period}</p>
+                </div>
+              ))}
+              <h3 class={styles.groupLabel}>Certifications</h3>
+              <ul class={styles.list}>
+                {certifications.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {section.id === 'contact' && (
+            <ul class={styles.links}>
+              {links.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noreferrer">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      );
+    })
+  }
+</div>

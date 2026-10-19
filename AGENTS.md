@@ -16,7 +16,7 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 
 ## Page
 
-- Copy and data live in the frontmatter of `src/pages/index.astro`. Styles are CSS modules in `src/styles/home.module.css`. Do not add a UI framework.
+- Copy and data live in `src/features/profile/profile.ts`. The page reads that module. Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
 - Public name is Antonio Ospina. Links are LinkedIn, GitHub, and Medium only. Do not publish an email.
 - Text-first layout. `public/img/home.jpeg` is unused; do not restore a photo hero unless asked.
 - Keep the existing gtag snippet (`G-V3TGD1L0Z4`).
