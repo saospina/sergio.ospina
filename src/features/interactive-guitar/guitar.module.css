@@ -24,11 +24,15 @@
 
 .strings {
   position: absolute;
-  /* Nut y=78 and saddle y=307 in viewBox 0 0 280 360. */
+  /*
+   * Nut y=78 and saddle y=307 in viewBox 0 0 280 360. The 11% side inset keeps
+   * the strings over the fretboard, which is narrower than the body so the
+   * upper bout can show. STRING_INSET in Guitar.astro must match.
+   */
   top: 21.67%;
   bottom: 14.72%;
-  left: 0;
-  right: 0;
+  left: 11%;
+  right: 11%;
   z-index: 1;
   display: flex;
   align-items: stretch;
@@ -40,7 +44,7 @@
   position: relative;
   flex: 1 1 0;
   width: 0;
-  min-width: 44px;
+  min-width: 24px;
   min-height: 44px;
   margin: 0;
   padding: 0;
@@ -70,7 +74,7 @@
 
 .stringLine {
   stroke: currentColor;
-  stroke-width: 1.5px;
+  stroke-width: var(--string-gauge, 1.5px);
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
@@ -83,7 +87,7 @@
 
 .string:hover .stringLine,
 .string:focus-visible .stringLine {
-  stroke-width: 2.25px;
+  stroke-width: calc(var(--string-gauge, 1.5px) + 0.75px);
 }
 
 .string:focus {
@@ -101,7 +105,7 @@
 }
 
 .string[aria-pressed='true'] .stringLine {
-  stroke-width: 3px;
+  stroke-width: calc(var(--string-gauge, 1.5px) + 1.5px);
 }
 
 .string:disabled,
@@ -113,7 +117,7 @@
 
 .string:disabled .stringLine,
 .string[aria-disabled='true'] .stringLine {
-  stroke-width: 1.5px;
+  stroke-width: var(--string-gauge, 1.5px);
 }
 
 .string[aria-disabled='true']:focus-visible {
@@ -133,19 +137,18 @@
   border: 0;
 }
 
+/*
+ * Below the two-column breakpoint the guitar is centered and keeps its
+ * 280 / 360 ratio, so the art is never stretched by preserveAspectRatio="none".
+ * 17rem is a floor, not a preference: six .string buttons at min-width 44px
+ * need 264px, and .guitar clips its overflow, so a narrower box would silently
+ * cut off the sixth string.
+ */
 @media (max-width: 1024px) {
   .guitar {
     width: 100%;
-    height: 11rem;
-    max-height: 11rem;
-    aspect-ratio: auto;
-  }
-}
-
-@media (max-width: 600px) {
-  .guitar {
-    height: 9.5rem;
-    max-height: 9.5rem;
+    max-width: 17rem;
+    margin-inline: auto;
   }
 }
 
