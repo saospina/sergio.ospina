@@ -1,0 +1,26 @@
+.notice {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid #f0a500;
+  background: #141210;
+  color: #fff;
+  text-align: center;
+}
+
+.text {
+  margin: 0 auto;
+  max-width: 58rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.text strong {
+  color: #f0a500;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 600px) {
+  .text {
+    font-size: 0.85rem;
+  }
+}

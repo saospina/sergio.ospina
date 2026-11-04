@@ -2,6 +2,7 @@
 import AudioControls from '../features/audio-experience/AudioControls.astro';
 import Guitar from '../features/interactive-guitar/Guitar.astro';
 import ProfilePanel from '../features/profile/ProfilePanel.astro';
+import SiteNotice from '../features/site-notice/SiteNotice.astro';
 import { description, displayName, getDefaultSection, links } from '../features/profile/profile';
 import styles from '../styles/home.module.css';
 
@@ -39,6 +40,7 @@ const icons: Record<string, string> = {
   </head>
   <body>
     <a class={styles.skip} href="#profile">Skip to profile</a>
+    <SiteNotice />
     <main
       class={styles.page}
       style={`--background-image: url('${base}img/home.jpeg')`}
