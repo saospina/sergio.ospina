@@ -42,7 +42,11 @@ export type ProfileSection = {
   body: string;
   accentColor: string;
   stringIndex: number;
+  navLabel: string;
+  note: string;
 };
+
+export const headline = 'Frontend Tech Lead · Medellín';
 
 export const experience: ExperienceJob[] = [
   {
@@ -162,6 +166,8 @@ export const sections: ProfileSection[] = [
   {
     id: 'about',
     title: 'About Me',
+    navLabel: 'About',
+    note: 'D3',
     shortDescription: 'Frontend Tech Lead at EPAM Systems, in Medellín.',
     body: 'I lead the frontend team for Copa Airlines’ booking and payments platform. The work is the product and the decisions around it: architecture, coding standards, reviews, and technical debt.\n\nI started in quality assurance, automating tests and certifying banking systems, and I still build with that bias. I work in English and Spanish.',
     accentColor: accent,
@@ -170,6 +176,8 @@ export const sections: ProfileSection[] = [
   {
     id: 'skills',
     title: 'Skills',
+    navLabel: 'Skills',
+    note: 'A2',
     shortDescription: 'React, Next.js, React Native, and TypeScript.',
     body: 'Frontend, quality, and practice.',
     accentColor: accent,
@@ -178,6 +186,8 @@ export const sections: ProfileSection[] = [
   {
     id: 'experience',
     title: 'Experience',
+    navLabel: 'Experience',
+    note: 'E2',
     shortDescription: 'Frontend Tech Lead since Jan 2026. Frontend Developer ended Jan 2026.',
     body: 'EPAM Systems, Yuxi Global, Tata Consultancy Services, and Unisys.',
     accentColor: ink,
@@ -186,6 +196,8 @@ export const sections: ProfileSection[] = [
   {
     id: 'projects',
     title: 'Projects',
+    navLabel: 'Projects',
+    note: 'G3',
     shortDescription: 'Placeholder',
     body: 'Placeholder: no projects are listed in the existing site or resume.',
     accentColor: muted,
@@ -194,6 +206,8 @@ export const sections: ProfileSection[] = [
   {
     id: 'interests',
     title: 'Interests',
+    navLabel: 'Interests',
+    note: 'B3',
     shortDescription: 'Placeholder',
     body: 'Placeholder: no interests are listed in the existing site or resume.',
     accentColor: muted,
@@ -202,8 +216,10 @@ export const sections: ProfileSection[] = [
   {
     id: 'contact',
     title: 'Contact',
+    navLabel: 'Contact',
+    note: 'E4',
     shortDescription: 'LinkedIn, GitHub, and Medium.',
-    body: 'These are the only published profiles.',
+    body: 'Published profiles available.',
     accentColor: accent,
     stringIndex: 6,
   },

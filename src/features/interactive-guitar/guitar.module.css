@@ -1,15 +1,28 @@
+/*
+ * Desktop: the 420 x 780 guitar stands in the left column at a height that
+ * fits the viewport. Mobile (below 860px): the same SVG is rotated -90deg
+ * inside .stage so the headstock sits on the left and the neck runs across
+ * as a horizontal strip. Labels move to the HTML rows above and below it.
+ */
 .guitar {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 100%;
   min-width: 0;
-  aspect-ratio: 280 / 360;
-  max-height: calc(100vh - 6.5rem);
-  max-height: calc(100dvh - 6.5rem);
-  overflow-x: clip;
-  overflow-y: clip;
-  color: rgba(255, 252, 248, 0.92);
+  color: #e9e4d8;
   user-select: none;
+}
+
+/* Width follows the 420 : 780 ratio and the viewport height, so the guitar
+   never grows taller than the screen. */
+.stage {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(100%, 420px, calc((100vh - 200px) * 420 / 780));
+  width: min(100%, 420px, calc((100dvh - 200px) * 420 / 780));
+  aspect-ratio: 420 / 780;
 }
 
 .art {
@@ -17,149 +30,202 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
-  pointer-events: none;
+  overflow: visible;
   filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.8));
 }
 
-.strings {
-  position: absolute;
-  /*
-   * Nut y=78 and saddle y=307 in viewBox 0 0 280 360. The 11% side inset keeps
-   * the strings over the fretboard, which is narrower than the body so the
-   * upper bout can show. STRING_INSET in Guitar.astro must match.
-   */
-  top: 21.67%;
-  bottom: 14.72%;
-  left: 11%;
-  right: 11%;
-  z-index: 1;
-  display: flex;
-  align-items: stretch;
-  margin: 0;
-  padding: 0;
+.brand {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  fill: #a9b0a9;
 }
 
+/* String link: hit area, tuner, shaft, post, string, label. */
 .string {
-  position: relative;
-  flex: 1 1 0;
-  width: 0;
-  min-width: 24px;
-  min-height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   cursor: pointer;
-  appearance: none;
-  touch-action: manipulation;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 160ms ease, color 160ms ease, opacity 160ms ease;
 }
 
-.stringSvg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-  --pluck-glow: 0px;
-  filter:
-    drop-shadow(0 0 1px rgba(0, 0, 0, 0.85))
-    drop-shadow(0 0 var(--pluck-glow) rgba(255, 252, 248, 0.95));
+.hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16px;
+  pointer-events: stroke;
 }
 
 .stringLine {
-  stroke: currentColor;
-  stroke-width: var(--string-gauge, 1.5px);
+  fill: none;
+  stroke: #e9e4d8;
+  stroke-opacity: 0.75;
+  stroke-width: var(--gauge, 1px);
   stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  transition: stroke 180ms ease, stroke-opacity 180ms ease, stroke-width 180ms ease;
 }
 
-.string:hover,
-.string:focus-visible {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.07);
+.shaft {
+  stroke: #e9e4d8;
+  stroke-opacity: 0.75;
+  stroke-width: 1px;
+  transition: stroke 180ms ease;
 }
 
-.string:hover .stringLine,
-.string:focus-visible .stringLine {
-  stroke-width: calc(var(--string-gauge, 1.5px) + 0.75px);
+.button {
+  fill: #121714;
+  stroke: #e9e4d8;
+  stroke-width: 1.1px;
+  transition: stroke 180ms ease, fill 180ms ease;
 }
 
-.string:focus {
-  outline: none;
+.post {
+  fill: rgba(255, 250, 240, 0.4);
+  stroke: #e9e4d8;
+  stroke-width: 1px;
+  transition: fill 180ms ease, stroke 180ms ease;
 }
 
-.string:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: -3px;
+.name {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  fill: #e9e4d8;
+  transition: fill 180ms ease;
 }
 
-.string[aria-pressed='true'] {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.14);
+.note {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: #a9b0a9;
+  transition: fill 180ms ease;
 }
 
-.string[aria-pressed='true'] .stringLine {
-  stroke-width: calc(var(--string-gauge, 1.5px) + 1.5px);
+.halo {
+  fill: none;
+  stroke: none;
 }
 
-.string:disabled,
-.string[aria-disabled='true'] {
-  cursor: not-allowed;
-  opacity: 0.35;
-  color: rgba(255, 255, 255, 0.45);
+.string:hover .stringLine {
+  stroke-opacity: 1;
 }
 
-.string:disabled .stringLine,
-.string[aria-disabled='true'] .stringLine {
-  stroke-width: var(--string-gauge, 1.5px);
+.string:focus-visible .halo {
+  fill: rgba(233, 228, 216, 0.06);
+  stroke: #e9e4d8;
+  stroke-width: 1px;
+  stroke-dasharray: 3 3;
 }
 
-.string[aria-disabled='true']:focus-visible {
-  outline-color: rgba(255, 255, 255, 0.45);
+/* Active section: amber string, tuner, post and label. */
+.string[aria-current='true'] .stringLine {
+  stroke: #e0a04a;
+  stroke-opacity: 1;
+  stroke-width: calc(var(--gauge, 1px) + 0.6px);
 }
 
-.label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+.string[aria-current='true'] .shaft,
+.string[aria-current='true'] .button {
+  stroke: #e0a04a;
 }
 
-/*
- * Below the two-column breakpoint the guitar is centered and keeps its
- * 280 / 360 ratio, so the art is never stretched by preserveAspectRatio="none".
- * 17rem is a floor, not a preference: six .string buttons at min-width 44px
- * need 264px, and .guitar clips its overflow, so a narrower box would silently
- * cut off the sixth string.
- */
-@media (max-width: 1024px) {
+.string[aria-current='true'] .post {
+  fill: #e0a04a;
+  stroke: #e0a04a;
+}
+
+.string[aria-current='true'] .name,
+.string[aria-current='true'] .note {
+  fill: #e0a04a;
+}
+
+/* Mobile label rows are hidden on desktop. */
+.mobileLabels {
+  display: none;
+}
+
+.mobileName,
+.mobileNote {
+  display: block;
+}
+
+.mobileName {
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: #e9e4d8;
+}
+
+.mobileNote {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #a9b0a9;
+}
+
+.mobileLabels a {
+  display: block;
+  min-height: 44px;
+  padding: 0.25rem 0.1rem;
+  text-decoration: none;
+}
+
+.mobileLabels a[aria-current='true'] .mobileName,
+.mobileLabels a[aria-current='true'] .mobileNote {
+  color: #e0a04a;
+}
+
+@media (max-width: 859px) {
   .guitar {
+    gap: 0.5rem;
+  }
+
+  .stage {
+    position: relative;
     width: 100%;
-    max-width: 17rem;
-    margin-inline: auto;
+    height: auto;
+    aspect-ratio: 780 / 420;
+    container-type: inline-size;
+  }
+
+  /* The 420 x 780 art is 100cqw tall once rotated, so its layout box is
+     53.85% wide and 100% tall, centered in the strip. */
+  .art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 53.8462cqw;
+    height: 100cqw;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%) rotate(-90deg);
+  }
+
+  .name,
+  .note {
+    display: none;
+  }
+
+  .mobileLabels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+  }
+
+  .mobileLabelsTop {
+    order: -1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .string,
   .stringLine,
-  .stringSvg {
+  .shaft,
+  .button,
+  .post,
+  .name,
+  .note,
+  .mobileLabels a {
     transition: none;
-  }
-
-  .stringSvg {
-    --pluck-glow: 0px;
   }
 }

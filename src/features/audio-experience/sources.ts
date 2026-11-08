@@ -1,7 +1,9 @@
-export const DEFAULT_VOLUME = 0.7;
+export const DEFAULT_VOLUME = 0.6;
 export const STRING_COUNT = 6;
 
-const FALLBACK_HZ: readonly number[] = [329.63, 246.94, 196, 146.83, 110, 82.41];
+// String 1-6 maps to About D3, Skills A2, Experience E2, Projects G3,
+// Interests B3, Contact E4.
+const FALLBACK_HZ: readonly number[] = [146.83, 110, 82.41, 196, 246.94, 329.63];
 
 export function fallbackFrequency(stringIndex: number): number | null {
   const hz: number | undefined = FALLBACK_HZ[stringIndex - 1];

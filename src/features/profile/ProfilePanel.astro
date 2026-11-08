@@ -10,34 +10,26 @@ import {
 } from './profile';
 import styles from './profile.module.css';
 
-interface Props {
-  active: ProfileSection;
-}
-
-const { active } = Astro.props;
-
 function paragraphs(body: string): string[] {
   return body.split('\n\n').filter((paragraph) => paragraph.length > 0);
 }
+
+const ArrowIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"></path></svg>`;
 ---
 
-<div id="profile" class={styles.panel} data-profile-panel tabindex="-1">
-  <div class={styles.live} data-section-live aria-live="polite" aria-atomic="true">
-    {active.title}
-  </div>
+<div id="profile" class={styles.panel} tabindex="-1">
   {
-    sections.map((section) => {
-      const isActive = section.id === active.id;
+    sections.map((section: ProfileSection, index: number) => {
+      const next: ProfileSection | undefined = sections[index + 1];
+      const isPlaceholder: boolean = section.shortDescription === 'Placeholder';
       return (
         <article
           id={section.id}
           data-section-id={section.id}
-          data-active={isActive ? 'true' : undefined}
-          class:list={[styles.section, section.shortDescription === 'Placeholder' && styles.placeholder]}
-          style={`--section-accent: ${section.accentColor}`}
+          class:list={[styles.section, isPlaceholder && styles.placeholder]}
           aria-labelledby={`${section.id}-title`}
-          aria-current={isActive ? 'true' : undefined}
         >
+          <p class={styles.eyebrow}>{`0${section.stringIndex} · ${section.note}`}</p>
           <h2 id={`${section.id}-title`} class={styles.title}>
             {section.title}
           </h2>
@@ -45,6 +37,20 @@ function paragraphs(body: string): string[] {
           {paragraphs(section.body).map((paragraph) => (
             <p class={styles.body}>{paragraph}</p>
           ))}
+
+          {section.id === 'about' && (
+            <ul class={styles.pills}>
+              {links.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noreferrer" class={styles.pill}>
+                    {link.label}
+                    <Fragment set:html={ArrowIcon} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+
           {section.id === 'skills' && (
             <div class={styles.groups}>
               {skills.map((group) => (
@@ -59,6 +65,7 @@ function paragraphs(body: string): string[] {
               ))}
             </div>
           )}
+
           {section.id === 'experience' && (
             <div>
               {experience.map((job) => (
@@ -97,6 +104,7 @@ function paragraphs(body: string): string[] {
               </ul>
             </div>
           )}
+
           {section.id === 'contact' && (
             <ul class={styles.links}>
               {links.map((link) => (
@@ -107,6 +115,14 @@ function paragraphs(body: string): string[] {
                 </li>
               ))}
             </ul>
+          )}
+
+          {next && (
+            <a class={styles.next} href={`#${next.id}`}>
+              <span class={styles.nextMeta}>{`Next string · 0${next.stringIndex} · ${next.note}`}</span>
+              <span class={styles.nextName}>{next.title}</span>
+              <Fragment set:html={ArrowIcon} />
+            </a>
           )}
         </article>
       );

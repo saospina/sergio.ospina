@@ -1,70 +1,120 @@
 .controls {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
-  padding: 0.35rem 0.5rem;
-  color: #fff;
-  background: #141210;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 22rem;
 }
 
 .controls[hidden] {
   display: none;
 }
 
-.status {
-  flex: 1 1 100%;
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #2a2f2b;
+  border-radius: 999px;
+  background: rgba(13, 17, 15, 0.6);
+}
+
+.mute {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #3a403b;
+  border-radius: 999px;
+  background: #161b18;
+  color: #e9e4d8;
+  cursor: pointer;
+}
+
+.mute svg {
+  width: 18px;
+  height: 18px;
+}
+
+.vol {
+  flex: 0 0 auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #a9b0a9;
+}
+
+.range {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
   margin: 0;
-  color: #fff;
-  font-size: 0.85rem;
+  accent-color: #e0a04a;
+  cursor: pointer;
+}
+
+.hint {
+  flex: 0 0 auto;
+  padding-right: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #a9b0a9;
+  white-space: nowrap;
+}
+
+.hintTouch {
+  display: none;
+}
+
+.status {
+  margin: 0;
+  color: #a9b0a9;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
   line-height: 1.4;
+  text-align: center;
 }
 
 .status[hidden] {
   display: none;
 }
 
-.volume {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-}
-
-.volume input {
-  flex: 1 1 auto;
-  width: 100%;
-  min-width: 0;
-  min-height: 44px;
-  accent-color: #fff;
-  cursor: pointer;
-}
-
-.mute {
-  flex: 0 0 auto;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
 .mute:focus-visible,
-.volume input:focus-visible {
-  outline: 2px solid #fff;
+.range:focus-visible {
+  outline: 2px solid #e0a04a;
   outline-offset: 2px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mute,
-  .volume input {
-    transition: none;
+@media (max-width: 859px) {
+  .controls {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .pill {
+    gap: 10px;
+    padding: 6px;
+  }
+
+  .hint {
+    display: none;
+  }
+}
+
+@media (hover: none) {
+  .hintPointer {
+    display: none;
+  }
+
+  .hintTouch {
+    display: inline;
   }
 }
