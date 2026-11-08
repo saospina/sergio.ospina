@@ -1,26 +1,27 @@
 .notice {
   width: 100%;
-  padding: 0.5rem 1rem;
-  border-bottom: 2px solid #f0a500;
-  background: #141210;
-  color: #fff;
+  padding: 10px 24px;
+  border-bottom: 1px solid #2a2f2b;
+  background: rgba(13, 17, 15, 0.9);
+  color: #a9b0a9;
   text-align: center;
 }
 
 .text {
   margin: 0 auto;
   max-width: 58rem;
-  font-size: 0.9rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
   line-height: 1.5;
 }
 
 .text strong {
-  color: #f0a500;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  color: #e0a04a;
 }
 
 @media (max-width: 600px) {
-  .text {
-    font-size: 0.85rem;
+  .notice {
+    padding: 10px 16px;
   }
 }

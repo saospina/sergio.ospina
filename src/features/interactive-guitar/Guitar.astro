@@ -1,335 +1,145 @@
 ---
 import styles from './guitar.module.css';
-import { guitarStrings, initialStringIndex } from './strings';
+import { guitarStrings, stringPath, type GuitarString } from './strings';
 
-// Pinned geometry: .strings is positioned top 21.67% / bottom 14.72% of the
-// 0 0 280 360 viewBox, i.e. the nut and the saddle. Moving either of these
-// requires updating those percentages in guitar.module.css.
-const NUT_Y = 78;
-const SADDLE_Y = 307;
-const SCALE_LENGTH: number = SADDLE_Y - NUT_Y;
-
-// .strings is inset 11% on each side so the body reads wider than the neck.
-// These are the centers of the six flex buttons in that inset band; the nut,
-// fretboard, bridge and tuner runs are all built from them.
-const STRING_INSET = 0.11;
-const STRING_SPAN: number = (1 - 2 * STRING_INSET) * 280;
-
-const stringX: readonly number[] = [1, 2, 3, 4, 5, 6].map(
-  (column: number): number =>
-    Math.round((STRING_INSET * 280 + ((column - 0.5) * STRING_SPAN) / 6) * 100) / 100,
-);
-
-// Equal temperament: d(n) = scale * (1 - 2^(-n/12)). Frets 1-8 fit the board.
-function round2(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-const frets: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-  (fret: number): number => round2(NUT_Y + SCALE_LENGTH * (1 - 2 ** (-fret / 12))),
-);
-
-// Position inlays sit midway between frets 3-4, 5-6, 7-8 and 9-10.
-const inlays: readonly number[] = [
-  round2((frets[2]! + frets[3]!) / 2),
-  round2((frets[4]! + frets[5]!) / 2),
-  round2((frets[6]! + frets[7]!) / 2),
-  round2((frets[8]! + frets[9]!) / 2),
+// The fingerboard tapers from 190-230 at the nut (y 150) to 184-236 at y 470.
+const FRETS: readonly { y: number; left: number; right: number }[] = [
+  182, 212, 240, 266, 290, 312, 333, 352, 370, 386, 401, 415,
+].map((y: number) => ({
+  y,
+  left: Number((190 - ((y - 150) * 6) / 320).toFixed(2)),
+  right: Number((230 + ((y - 150) * 6) / 320).toFixed(2)),
+}));
+const INLAY_POINTS: readonly { x: number; y: number }[] = [
+  { x: 210, y: 226 },
+  { x: 210, y: 278 },
+  { x: 210, y: 322.5 },
+  { x: 210, y: 361 },
+  { x: 203, y: 408 },
+  { x: 217, y: 408 },
 ];
 
-// 3+3 tuners. The outer string reaches the post furthest from the nut, so the
-// headstock runs fan out without crossing.
-type Tuner = {
-  stringX: number;
-  postX: number;
-  postY: number;
-  buttonX: number;
-};
-
-const tuners: readonly Tuner[] = [
-  { stringX: stringX[0]!, postX: 66, postY: 26, buttonX: 30 },
-  { stringX: stringX[1]!, postX: 70, postY: 42, buttonX: 30 },
-  { stringX: stringX[2]!, postX: 74, postY: 58, buttonX: 30 },
-  { stringX: stringX[3]!, postX: 206, postY: 58, buttonX: 250 },
-  { stringX: stringX[4]!, postX: 210, postY: 42, buttonX: 250 },
-  { stringX: stringX[5]!, postX: 214, postY: 26, buttonX: 250 },
-];
-
-// Low E thickest, high E thinnest; indexed by string.index - 1.
-const stringGauges: readonly number[] = [1.1, 1.35, 1.6, 1.9, 2.15, 2.4];
-
-// Single waisted silhouette. The straight shoulder at y=148 is covered by the
-// fretboard, so the visible outline starts where the board ends.
-const BODY_PATH =
-  'M140 148 C182 148 214 153 236 165 ' +
-  'C255 176 262 187 262 200 ' +
-  'C262 222 236 233 233 251 ' +
-  'C231 271 262 281 270 301 ' +
-  'C276 317 265 337 241 346 ' +
-  'C219 353 180 355 140 355 ' +
-  'C100 355 61 353 39 346 ' +
-  'C15 337 4 317 10 301 ' +
-  'C18 281 49 271 47 251 ' +
-  'C44 233 18 222 18 200 ' +
-  'C18 187 25 176 44 165 ' +
-  'C66 153 98 148 140 148 Z';
-
-const FRETBOARD_PATH = 'M42 78 L238 78 L242 182 L38 182 Z';
-
-const HEADSTOCK_PATH =
-  'M42 78 C43 56 45 38 48 28 C51 16 60 11 72 11 ' +
-  'L208 11 C220 11 229 16 232 28 C235 38 237 56 238 78 Z';
-
-const BRIDGE_PATH =
-  'M40 303 C40 299 43 297 48 297 L232 297 C237 297 240 299 240 303 ' +
-  'L240 311 C240 315 237 317 232 317 L48 317 C43 317 40 315 40 311 Z';
-
-const PICKGUARD_PATH =
-  'M182 212 C212 219 230 240 226 262 C224 275 211 281 199 276 ' +
-  'C183 268 177 246 180 225 Z';
-
-const SOUNDHOLE_X = 140;
-const SOUNDHOLE_Y = 232;
+const topLabels: readonly GuitarString[] = guitarStrings.filter(
+  (string: GuitarString): boolean => string.side === 'right',
+);
+const bottomLabels: readonly GuitarString[] = guitarStrings.filter(
+  (string: GuitarString): boolean => string.side === 'left',
+);
 ---
 
-<div class={styles.guitar} data-guitar>
-  <svg
-    class={styles.art}
-    viewBox="0 0 280 360"
-    preserveAspectRatio="none"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <defs>
-      <linearGradient id="guitarTopGrad" x1="0" y1="0" x2="1" y2="0.6">
-        <stop offset="0" stop-color="#fff" stop-opacity="0.105" />
-        <stop offset="0.5" stop-color="#fff" stop-opacity="0.045" />
-        <stop offset="1" stop-color="#fff" stop-opacity="0.075" />
-      </linearGradient>
-      <linearGradient id="guitarBoardGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#fff" stop-opacity="0.02" />
-        <stop offset="0.42" stop-color="#fff" stop-opacity="0.11" />
-        <stop offset="1" stop-color="#fff" stop-opacity="0.015" />
-      </linearGradient>
-      <linearGradient id="guitarHeadGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#fff" stop-opacity="0.025" />
-        <stop offset="0.45" stop-color="#fff" stop-opacity="0.09" />
-        <stop offset="1" stop-color="#fff" stop-opacity="0.02" />
-      </linearGradient>
-      <linearGradient
-        id="guitarFretGrad"
-        gradientUnits="userSpaceOnUse"
-        x1="43"
-        y1="0"
-        x2="237"
-        y2="0"
-      >
-        <stop offset="0" stop-color="#fffcf8" stop-opacity="0.35" />
-        <stop offset="0.45" stop-color="#fffcf8" stop-opacity="0.95" />
-        <stop offset="1" stop-color="#fffcf8" stop-opacity="0.4" />
-      </linearGradient>
-      <radialGradient id="guitarHoleGrad" cx="0.5" cy="0.38" r="0.72">
-        <stop offset="0" stop-color="#000" stop-opacity="0.5" />
-        <stop offset="0.6" stop-color="#000" stop-opacity="0.76" />
-        <stop offset="1" stop-color="#000" stop-opacity="0.92" />
-      </radialGradient>
-      <clipPath id="guitarBodyClip">
-        <path d={BODY_PATH} />
-      </clipPath>
-    </defs>
-
-    <path d={BODY_PATH} fill="url(#guitarTopGrad)" stroke="none" />
-
-    <g clip-path="url(#guitarBodyClip)">
-      <g stroke="rgba(255,255,255,0.055)" stroke-width="0.8" fill="none">
-        <line x1="72" y1="146" x2="64" y2="358" />
-        <line x1="106" y1="146" x2="102" y2="358" />
-        <line x1="174" y1="146" x2="178" y2="358" />
-        <line x1="208" y1="146" x2="216" y2="358" />
-      </g>
-      <path d={BODY_PATH} fill="none" stroke="rgba(0,0,0,0.42)" stroke-width="7" />
-    </g>
-
-    <path
-      d={BODY_PATH}
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.7"
-      stroke-linejoin="round"
-    />
-    <path
-      d={BODY_PATH}
-      fill="none"
-      stroke="currentColor"
-      stroke-width="0.8"
-      stroke-opacity="0.5"
-      stroke-linejoin="round"
-      transform="translate(140 252) scale(0.955) translate(-140 -252)"
-    />
-
-    <path
-      d={HEADSTOCK_PATH}
-      fill="url(#guitarHeadGrad)"
-      stroke="currentColor"
-      stroke-width="1.45"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M129 74 L151 74 L148 54 L132 54 Z"
-      fill="rgba(0,0,0,0.3)"
-      stroke="currentColor"
-      stroke-width="0.9"
-      stroke-opacity="0.7"
-    />
-
-    <g fill="none" stroke="currentColor" stroke-width="0.85" stroke-opacity="0.75">
-      {
-        tuners.map((tuner: Tuner) => (
-          <line x1={tuner.stringX} y1={NUT_Y} x2={tuner.postX} y2={tuner.postY} />
-        ))
-      }
-      {
-        tuners.map((tuner: Tuner) => (
-          <line x1={tuner.postX} y1={tuner.postY} x2={tuner.buttonX} y2={tuner.postY} />
-        ))
-      }
-    </g>
-    <g fill="rgba(255,250,240,0.4)" stroke="currentColor" stroke-width="1.1">
-      {
-        tuners.map((tuner: Tuner) => (
-          <circle cx={tuner.postX} cy={tuner.postY} r="3.1" />
-        ))
-      }
-      {
-        tuners.map((tuner: Tuner) => (
-          <ellipse cx={tuner.buttonX} cy={tuner.postY} rx="7" ry="4.4" />
-        ))
-      }
-    </g>
-
-    <path d={FRETBOARD_PATH} fill="rgba(18,15,13,0.88)" stroke="none" />
-    <path
-      d={FRETBOARD_PATH}
-      fill="url(#guitarBoardGrad)"
-      stroke="currentColor"
-      stroke-width="1.2"
-      stroke-linejoin="round"
-    />
-    <g stroke="rgba(0,0,0,0.45)" stroke-width="0.7" fill="none">
-      {
-        frets.map((fretY: number) => (
-          <line x1="43" y1={round2(fretY + 0.9)} x2="237" y2={round2(fretY + 0.9)} />
-        ))
-      }
-    </g>
-    <g stroke="url(#guitarFretGrad)" stroke-width="1.3" stroke-linecap="round" fill="none">
-      {
-        frets.map((fretY: number) => (
-          <line x1="43" y1={fretY} x2="237" y2={fretY} />
-        ))
-      }
-    </g>
-    <g fill="currentColor" fill-opacity="0.75" stroke="none">
-      {
-        inlays.map((inlayY: number) => (
-          <circle cx="140" cy={inlayY} r="2.6" />
-        ))
-      }
-    </g>
-
-    <rect
-      x="42"
-      y="75.5"
-      width="196"
-      height="5"
-      rx="1.3"
-      fill="rgba(255,250,240,0.55)"
-      stroke="rgba(0,0,0,0.35)"
-      stroke-width="0.6"
-    />
-    <g stroke="rgba(0,0,0,0.45)" stroke-width="0.9" fill="none">
-      {
-        stringX.map((slotX: number) => (
-          <line x1={slotX} y1="76" x2={slotX} y2="80" />
-        ))
-      }
-    </g>
-
-    <circle cx={SOUNDHOLE_X} cy={SOUNDHOLE_Y} r="24" fill="url(#guitarHoleGrad)" stroke="none" />
-    <g fill="none" stroke="currentColor">
-      <circle cx={SOUNDHOLE_X} cy={SOUNDHOLE_Y} r="24" stroke-width="1.6" />
-      <circle cx={SOUNDHOLE_X} cy={SOUNDHOLE_Y} r="28.5" stroke-width="1.1" stroke-opacity="0.75" />
-      <circle
-        cx={SOUNDHOLE_X}
-        cy={SOUNDHOLE_Y}
-        r="31.5"
-        stroke-width="2"
-        stroke-opacity="0.45"
-        stroke-dasharray="3 5"
-      />
-    </g>
-
-    <path
-      d={PICKGUARD_PATH}
-      fill="rgba(255,255,255,0.05)"
-      stroke="currentColor"
-      stroke-width="0.8"
-      stroke-opacity="0.4"
-    />
-
-    <path
-      d={BRIDGE_PATH}
-      fill="rgba(0,0,0,0.3)"
-      stroke="currentColor"
-      stroke-width="1.4"
-      stroke-linejoin="round"
-    />
-    <rect
-      x="46"
-      y={SADDLE_Y - 1.5}
-      width="188"
-      height="3"
-      rx="1"
-      fill="rgba(255,250,240,0.65)"
-      stroke="none"
-    />
-    <g stroke="none">
-      {
-        stringX.map((pinX: number) => (
-          <>
-            <circle cx={pinX} cy="313" r="2.6" fill="currentColor" />
-            <circle cx={pinX} cy="312.2" r="1" fill="rgba(0,0,0,0.45)" />
-          </>
-        ))
-      }
-    </g>
-  </svg>
-  <div class={styles.strings} role="group" aria-label="Guitar strings">
+<nav class={styles.guitar} aria-label="Sections" data-guitar>
+  <ul class={`${styles.mobileLabels} ${styles.mobileLabelsTop}`} aria-hidden="true">
     {
-      guitarStrings.map((string) => (
-        <button
-          type="button"
-          id={string.id}
-          class={styles.string}
-          style={`--string-gauge: ${stringGauges[string.index - 1] ?? 1.5}px`}
-          data-guitar-string
-          data-string-index={string.index}
-          aria-controls={string.sectionId}
-          aria-pressed={string.index === initialStringIndex ? 'true' : 'false'}
-        >
-          <span class={styles.label}>{string.label}</span>
-          <svg
-            class={styles.stringSvg}
-            data-string-visual
-            viewBox="0 0 44 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path class={styles.stringLine} data-string-path d="M22 1 Q22 50 22 99" />
-          </svg>
-        </button>
+      topLabels.map((string: GuitarString) => (
+        <li>
+          <a href={`#${string.sectionId}`} tabindex="-1" data-string-index={string.index} data-mobile-label>
+            <span class={styles.mobileName}>{string.label}</span>
+            <span class={styles.mobileNote}>{`0${string.index} · ${string.note}`}</span>
+          </a>
+        </li>
       ))
     }
+  </ul>
+
+  <div class={styles.stage}>
+  <svg class={styles.art} viewBox="0 0 420 780" focusable="false">
+    <!-- body -->
+    <path d="M175 438 C120 438 92 462 92 505 C92 545 118 560 118 585 C118 610 62 630 62 680 C62 730 130 752 210 752 C290 752 358 730 358 680 C358 630 302 610 302 585 C302 560 328 545 328 505 C328 462 300 438 245 438 Z" fill="#121714" stroke="#E9E4D8" stroke-width="1.5"></path>
+    <path d="M178 446 C128 446 100 468 100 505 C100 543 126 558 126 585 C126 614 70 634 70 680 C70 724 134 744 210 744 C286 744 350 724 350 680 C350 634 294 614 294 585 C294 558 320 543 320 505 C320 468 292 446 242 446 Z" fill="none" stroke="#E9E4D8" stroke-opacity="0.25" stroke-width="1"></path>
+    <!-- pickguard -->
+    <path d="M250 585 C282 570 302 600 298 630 C294 660 264 668 248 650 Z" fill="none" stroke="#E9E4D8" stroke-opacity="0.3" stroke-width="1"></path>
+    <!-- soundhole + rosette -->
+    <circle cx="210" cy="560" r="46" fill="none" stroke="#E9E4D8" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="2 4"></circle>
+    <circle cx="210" cy="560" r="40" fill="none" stroke="#E9E4D8" stroke-opacity="0.6" stroke-width="1"></circle>
+    <circle cx="210" cy="560" r="34" fill="#070908" stroke="#E9E4D8" stroke-width="1.2"></circle>
+    <!-- bridge -->
+    <rect x="166" y="642" width="88" height="30" rx="7" fill="#121714" stroke="#E9E4D8" stroke-width="1.2"></rect>
+    <line x1="182" y1="655" x2="238" y2="655" stroke="#E9E4D8" stroke-width="2"></line>
+    <!-- headstock -->
+    <path d="M190 150 L180 62 Q180 40 200 40 L220 40 Q240 40 240 62 L230 150 Z" fill="#121714" stroke="#E9E4D8" stroke-width="1.5"></path>
+    <text x="210" y="58" text-anchor="middle" class={styles.brand}>AO</text>
+    <!-- neck / fingerboard -->
+    <path d="M190 150 L230 150 L236 470 L184 470 Z" fill="#161B18" stroke="#E9E4D8" stroke-width="1.5"></path>
+    <line x1="189" y1="150" x2="231" y2="150" stroke="#E9E4D8" stroke-width="3"></line>
+    <g stroke="#E9E4D8" stroke-opacity="0.45" stroke-width="1">
+      {
+        FRETS.map((fret) => (
+          <line x1={fret.left} y1={fret.y} x2={fret.right} y2={fret.y} />
+        ))
+      }
+    </g>
+    <g fill="#E9E4D8" fill-opacity="0.5">
+      {
+        INLAY_POINTS.map((point) => (
+          <circle cx={point.x} cy={point.y} r="2.5" />
+        ))
+      }
+    </g>
+
+    <!-- strings, tuners and labels: each one is a link to its section -->
+    {
+      guitarStrings.map((string: GuitarString) => {
+        const isLeft: boolean = string.side === 'left';
+        const shaftStartX: number = isLeft ? string.buttonX + 11 : string.buttonX - 11;
+        const labelX: number = isLeft ? 140 : 280;
+        const d: string = stringPath(string, 0);
+        return (
+          <a
+            class={styles.string}
+            href={`#${string.sectionId}`}
+            aria-label={`${string.label}, string ${string.index}, ${string.note}`}
+            data-guitar-string
+            data-string-index={string.index}
+            style={`--gauge: ${string.gauge}px`}
+          >
+            <path class={styles.hit} d={d} />
+            <line
+              class={styles.shaft}
+              x1={shaftStartX}
+              y1={string.postY}
+              x2={string.shaftEndX}
+              y2={string.postY}
+            />
+            <ellipse class={styles.button} cx={string.buttonX} cy={string.postY} rx="11" ry="6" />
+            <circle class={styles.post} cx={string.postX} cy={string.postY} r="3.5" />
+            <path class={styles.stringLine} d={d} data-string-path />
+            <rect
+              class={styles.halo}
+              x={isLeft ? 34 : 272}
+              y={string.labelY - 12}
+              width="108"
+              height="26"
+              rx="4"
+            />
+            <text class={styles.name} x={labelX} y={string.labelY} text-anchor={isLeft ? 'end' : 'start'}>
+              {string.label}
+            </text>
+            <text class={styles.note} x={labelX} y={string.labelY + 14} text-anchor={isLeft ? 'end' : 'start'}>
+              {`0${string.index} · ${string.note}`}
+            </text>
+          </a>
+        );
+      })
+    }
+
+    <!-- sound hole -->
+    <circle cx="140" cy="232" r="24" fill="rgba(0,0,0,0.6)" stroke="none"></circle>
+    <circle cx="140" cy="232" r="24" fill="none" stroke="#E9E4D8" stroke-width="1.6"></circle>
+    <circle cx="140" cy="232" r="28.5" fill="none" stroke="#E9E4D8" stroke-width="1.1" stroke-opacity="0.75"></circle>
+    <circle cx="140" cy="232" r="31.5" fill="none" stroke="#E9E4D8" stroke-width="2" stroke-opacity="0.45" stroke-dasharray="3 5"></circle>
+  </svg>
   </div>
-</div>
+
+  <ul class={`${styles.mobileLabels} ${styles.mobileLabelsBottom}`} aria-hidden="true">
+    {
+      bottomLabels.map((string: GuitarString) => (
+        <li>
+          <a href={`#${string.sectionId}`} tabindex="-1" data-string-index={string.index} data-mobile-label>
+            <span class={styles.mobileName}>{string.label}</span>
+            <span class={styles.mobileNote}>{`0${string.index} · ${string.note}`}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

@@ -1,20 +1,60 @@
 ---
 import styles from './audio-controls.module.css';
 import { DEFAULT_VOLUME } from './sources';
+
+const initialVolume: number = Math.round(DEFAULT_VOLUME * 100);
 ---
 
-<div class={styles.controls} data-audio-controls role="group" aria-label="Audio" hidden>
-  <p class={styles.status} data-audio-status role="status" hidden></p>
-  <label class={styles.volume}>
-    Volume
+<div class={styles.controls} data-audio-controls role="group" aria-label="Sound" hidden>
+  <div class={styles.pill}>
+    <button type="button" class={styles.mute} data-mute aria-pressed="false" aria-label="Mute sound">
+      <svg
+        data-icon-on
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M11 5 6 9H3v6h3l5 4V5z"></path>
+        <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+        <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+      </svg>
+      <svg
+        data-icon-off
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+        hidden
+      >
+        <path d="M11 5 6 9H3v6h3l5 4V5z"></path>
+        <path d="M22 9l-6 6M16 9l6 6"></path>
+      </svg>
+    </button>
+    <label class={styles.vol} for="guitar-volume">VOL</label>
     <input
+      id="guitar-volume"
+      class={styles.range}
       type="range"
       min="0"
-      max="1"
-      step="0.01"
-      value={DEFAULT_VOLUME}
+      max="100"
+      step="1"
+      value={initialVolume}
+      aria-label="Volume"
       data-volume
     />
-  </label>
-  <button type="button" data-mute aria-pressed="false">Mute</button>
+    <span class={styles.hint}>
+      <span class={styles.hintPointer}>Hover to pluck</span>
+      <span class={styles.hintTouch}>Tap to pluck</span>
+    </span>
+  </div>
+  <p class={styles.status} data-audio-status role="status" hidden></p>
 </div>
