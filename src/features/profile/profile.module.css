@@ -91,7 +91,8 @@
 }
 
 .list,
-.links {
+.links,
+.bullets {
   margin: 0.5rem 0 0;
   padding: 0;
   list-style: none;
@@ -100,9 +101,36 @@
   color: #c9ccc4;
 }
 
+.bullets {
+  max-width: 62ch;
+  margin-top: 1rem;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
 .list li,
-.links li {
-  padding: 0.25rem 0;
+.links li,
+.bullets li {
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1.1rem;
+}
+
+.bullets li {
+  padding: 0.4rem 0 0.4rem 1.25rem;
+}
+
+/* Amber dot marker; padding-left reserves room so wrapped lines stay aligned. */
+.list li::before,
+.links li::before,
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e0a04a;
 }
 
 .links a {
@@ -194,6 +222,8 @@
 @media (max-width: 859px) {
   .section {
     padding-bottom: 2.5rem;
+    /* Clears the sticky string bar when a section is reached from it. */
+    scroll-margin-top: 5.5rem;
   }
 
   .section + .section {

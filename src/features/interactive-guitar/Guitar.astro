@@ -1,6 +1,6 @@
 ---
 import styles from './guitar.module.css';
-import { guitarStrings, stringPath, type GuitarString } from './strings';
+import { guitarStrings, ROW_HALF_HEIGHT, stringPath, type GuitarString } from './strings';
 
 // The fingerboard tapers from 190-230 at the nut (y 150) to 184-236 at y 470.
 const FRETS: readonly { y: number; left: number; right: number }[] = [
@@ -18,30 +18,11 @@ const INLAY_POINTS: readonly { x: number; y: number }[] = [
   { x: 203, y: 408 },
   { x: 217, y: 408 },
 ];
-
-const topLabels: readonly GuitarString[] = guitarStrings.filter(
-  (string: GuitarString): boolean => string.side === 'right',
-);
-const bottomLabels: readonly GuitarString[] = guitarStrings.filter(
-  (string: GuitarString): boolean => string.side === 'left',
-);
 ---
 
+<!-- Desktop: this SVG is the section nav. Mobile: it is decorative (inert, set in index.astro) and StringNav carries the links. -->
 <nav class={styles.guitar} aria-label="Sections" data-guitar>
-  <ul class={`${styles.mobileLabels} ${styles.mobileLabelsTop}`} aria-hidden="true">
-    {
-      topLabels.map((string: GuitarString) => (
-        <li>
-          <a href={`#${string.sectionId}`} tabindex="-1" data-string-index={string.index} data-mobile-label>
-            <span class={styles.mobileName}>{string.label}</span>
-            <span class={styles.mobileNote}>{`0${string.index} · ${string.note}`}</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
-
-  <div class={styles.stage}>
+  <div class={styles.stage} data-guitar-stage>
   <svg class={styles.art} viewBox="0 0 420 780" focusable="false">
     <!-- body -->
     <path d="M175 438 C120 438 92 462 92 505 C92 545 118 560 118 585 C118 610 62 630 62 680 C62 730 130 752 210 752 C290 752 358 730 358 680 C358 630 302 610 302 585 C302 560 328 545 328 505 C328 462 300 438 245 438 Z" fill="#121714" stroke="#E9E4D8" stroke-width="1.5"></path>
@@ -55,9 +36,9 @@ const bottomLabels: readonly GuitarString[] = guitarStrings.filter(
     <!-- bridge -->
     <rect x="166" y="642" width="88" height="30" rx="7" fill="#121714" stroke="#E9E4D8" stroke-width="1.2"></rect>
     <line x1="182" y1="655" x2="238" y2="655" stroke="#E9E4D8" stroke-width="2"></line>
-    <!-- headstock -->
-    <path d="M190 150 L180 62 Q180 40 200 40 L220 40 Q240 40 240 62 L230 150 Z" fill="#121714" stroke="#E9E4D8" stroke-width="1.5"></path>
-    <text x="210" y="58" text-anchor="middle" class={styles.brand}>AO</text>
+    <!-- headstock: wider than before so the tuners and their targets have room -->
+    <path d="M190 150 L172 62 Q172 30 200 30 L220 30 Q248 30 248 62 L230 150 Z" fill="#121714" stroke="#E9E4D8" stroke-width="1.5"></path>
+    <text x="210" y="46" text-anchor="middle" class={styles.brand}>AO</text>
     <!-- neck / fingerboard -->
     <path d="M190 150 L230 150 L236 470 L184 470 Z" fill="#161B18" stroke="#E9E4D8" stroke-width="1.5"></path>
     <line x1="189" y1="150" x2="231" y2="150" stroke="#E9E4D8" stroke-width="3"></line>
@@ -106,9 +87,9 @@ const bottomLabels: readonly GuitarString[] = guitarStrings.filter(
             <rect
               class={styles.halo}
               x={isLeft ? 34 : 272}
-              y={string.labelY - 12}
+              y={string.labelY - ROW_HALF_HEIGHT}
               width="108"
-              height="26"
+              height={ROW_HALF_HEIGHT * 2}
               rx="4"
             />
             <text class={styles.name} x={labelX} y={string.labelY} text-anchor={isLeft ? 'end' : 'start'}>
@@ -129,17 +110,4 @@ const bottomLabels: readonly GuitarString[] = guitarStrings.filter(
     <circle cx="140" cy="232" r="31.5" fill="none" stroke="#E9E4D8" stroke-width="2" stroke-opacity="0.45" stroke-dasharray="3 5"></circle>
   </svg>
   </div>
-
-  <ul class={`${styles.mobileLabels} ${styles.mobileLabelsBottom}`} aria-hidden="true">
-    {
-      bottomLabels.map((string: GuitarString) => (
-        <li>
-          <a href={`#${string.sectionId}`} tabindex="-1" data-string-index={string.index} data-mobile-label>
-            <span class={styles.mobileName}>{string.label}</span>
-            <span class={styles.mobileNote}>{`0${string.index} · ${string.note}`}</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
 </nav>

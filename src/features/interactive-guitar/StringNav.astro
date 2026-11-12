@@ -1,0 +1,31 @@
+---
+import styles from './string-nav.module.css';
+import { guitarStrings, type GuitarString } from './strings';
+
+// Mobile section nav. The rotated guitar is decorative there, so these six
+// chips are the only section links on small screens. Desktop hides this block.
+const ordered: readonly GuitarString[] = [...guitarStrings].sort(
+  (a: GuitarString, b: GuitarString): number => a.index - b.index,
+);
+---
+
+<nav class={styles.nav} aria-label="Sections" data-string-nav>
+  <ul class={styles.strip}>
+    {
+      ordered.map((string: GuitarString) => (
+        <li>
+          <a
+            class={styles.chip}
+            href={`#${string.sectionId}`}
+            data-string-index={string.index}
+            style={`--gauge: ${string.gauge}px`}
+          >
+            <span class={styles.line} aria-hidden="true"></span>
+            <span class={styles.name}>{string.label}</span>
+            <span class={styles.note}>{`0${string.index} · ${string.note}`}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

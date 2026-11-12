@@ -39,7 +39,8 @@ export type ProfileSection = {
   id: 'about' | 'skills' | 'experience' | 'projects' | 'interests' | 'contact';
   title: string;
   shortDescription: string;
-  body: string;
+  body?: string;
+  points?: string[];
   accentColor: string;
   stringIndex: number;
   navLabel: string;
@@ -169,7 +170,12 @@ export const sections: ProfileSection[] = [
     navLabel: 'About',
     note: 'D3',
     shortDescription: 'Frontend Tech Lead at EPAM Systems, in Medellín.',
-    body: 'I lead the frontend team for Copa Airlines’ booking and payments platform. The work is the product and the decisions around it: architecture, coding standards, reviews, and technical debt.\n\nI started in quality assurance, automating tests and certifying banking systems, and I still build with that bias. I work in English and Spanish.',
+    points: [
+      'I lead the frontend team for Copa Airlines’ booking and payments platform.',
+      'The work is the product and the decisions around it: architecture, coding standards, reviews, and technical debt.',
+      'I started in quality assurance, automating tests and certifying banking systems, and I still build with that bias.',
+      'I work in English and Spanish.',
+    ],
     accentColor: accent,
     stringIndex: 1,
   },
@@ -189,7 +195,6 @@ export const sections: ProfileSection[] = [
     navLabel: 'Experience',
     note: 'E2',
     shortDescription: 'Frontend Tech Lead since Jan 2026. Frontend Developer ended Jan 2026.',
-    body: 'EPAM Systems, Yuxi Global, Tata Consultancy Services, and Unisys.',
     accentColor: ink,
     stringIndex: 3,
   },

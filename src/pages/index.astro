@@ -1,6 +1,7 @@
 ---
 import AudioControls from '../features/audio-experience/AudioControls.astro';
 import Guitar from '../features/interactive-guitar/Guitar.astro';
+import StringNav from '../features/interactive-guitar/StringNav.astro';
 import ProfilePanel from '../features/profile/ProfilePanel.astro';
 import SiteNotice from '../features/site-notice/SiteNotice.astro';
 import { description, displayName, headline } from '../features/profile/profile';
@@ -40,6 +41,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
         <Guitar />
         <AudioControls />
       </div>
+      <StringNav />
       <div class={styles.content}>
         <header>
           <p class={styles.kicker}>{headline}</p>
@@ -53,25 +55,34 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <script>
       import { bindAudioControls } from '../features/audio-experience/bind-audio-controls';
       import { guitarAudio } from '../features/audio-experience/audio-engine';
-      import {
-        bindGuitarNav,
-        setActiveSection,
-        watchActiveSection,
-      } from '../features/interactive-guitar/guitar-nav';
+      import { bindGuitarNav, setActiveSection } from '../features/interactive-guitar/guitar-nav';
       import { initStringMotion, resetStrings } from '../features/interactive-guitar/guitar-motion';
       import { guitarStrings } from '../features/interactive-guitar/strings';
       import { getDefaultSection } from '../features/profile/profile';
+      import { watchActiveSection } from '../features/profile/watch-active-section';
 
       const guitar: Element | null = document.querySelector('[data-guitar]');
       if (guitar instanceof HTMLElement) {
         initStringMotion(guitar, guitarStrings);
-        bindGuitarNav(guitar, {
+        bindGuitarNav({
           playSound: (stringIndex: number): void => {
             void guitarAudio.playString(stringIndex);
           },
         });
-        setActiveSection(guitar, getDefaultSection().id);
-        watchActiveSection(guitar);
+        setActiveSection(getDefaultSection().id);
+        watchActiveSection(setActiveSection);
+
+        // Below 860px the rotated SVG is decorative: StringNav carries the links,
+        // so the SVG leaves the tab order and the accessibility tree.
+        const mobile: MediaQueryList = window.matchMedia('(max-width: 859px)');
+        const stage: HTMLElement | null = guitar.querySelector<HTMLElement>('[data-guitar-stage]');
+        const syncInert = (): void => {
+          if (stage) {
+            stage.inert = mobile.matches;
+          }
+        };
+        syncInert();
+        mobile.addEventListener('change', syncInert);
       }
 
       const controls: Element | null = document.querySelector('[data-audio-controls]');

@@ -1,0 +1,131 @@
+/* Mobile only. On desktop the SVG is the nav and this block is removed. */
+.nav {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  .nav {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 -16px;
+    padding: calc(0.5rem + env(safe-area-inset-top, 0px)) 16px 0.5rem;
+    background: rgba(13, 17, 15, 0.94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid #2a2f2b;
+  }
+
+  .strip {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .strip li {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+
+  /* 48px tall: comfortably above the touch target minimum. */
+  .chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-width: 5.75rem;
+    min-height: 48px;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #e9e4d8;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .chip:hover {
+    color: #e9e4d8;
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid #e0a04a;
+    outline-offset: 2px;
+  }
+
+  /* Mini string: its thickness is the string gauge. */
+  .line {
+    display: block;
+    width: 2.25rem;
+    border-top: var(--gauge, 1px) solid currentColor;
+    opacity: 0.75;
+  }
+
+  .name {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .note {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6rem;
+    line-height: 1.1;
+    color: #a9b0a9;
+  }
+
+  .chip[aria-current='true'] {
+    color: #e0a04a;
+    border-color: #3a403b;
+  }
+
+  .chip[aria-current='true'] .note {
+    color: #e0a04a;
+  }
+
+  .chip[aria-current='true'] .line {
+    opacity: 1;
+  }
+
+  /* Plucked: the mini string dips and springs back. */
+  .chip[data-plucked] .line {
+    animation: chip-pluck 600ms ease-out;
+  }
+
+  @keyframes chip-pluck {
+    0% {
+      transform: translateY(0);
+    }
+    20% {
+      transform: translateY(-3px);
+    }
+    45% {
+      transform: translateY(2px);
+    }
+    70% {
+      transform: translateY(-1px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip[data-plucked] .line {
+    animation: none;
+  }
+}
