@@ -1,8 +1,9 @@
 import { sections, type ProfileSection } from '../profile/profile';
 
 // Geometry for the 420 x 780 guitar. Every string runs from its tuner post,
-// over the nut at NUT_Y, to the bridge at BRIDGE_Y. Values come from
-// docs/design/guitar-nav-design.html.
+// over the nut at NUT_Y, to the bridge at BRIDGE_Y. Rows are 34 units apart so
+// each label target is at least 34px tall on desktop. The row values are newer
+// than docs/design/guitar-nav-design.html, which uses the old 25-unit pitch.
 export const NUT_Y = 150;
 export const BRIDGE_Y = 655;
 const BODY_CONTROL_Y = 402.5;
@@ -19,16 +20,18 @@ type StringGeometry = {
 };
 
 const GEOMETRY: readonly StringGeometry[] = [
-  { index: 1, postX: 196, postY: 70, buttonX: 160, shaftEndX: 181, nutX: 206.6, bridgeX: 205.2, gauge: 1.2 },
-  { index: 2, postX: 196, postY: 95, buttonX: 160, shaftEndX: 184, nutX: 199.8, bridgeX: 195.6, gauge: 1.25 },
-  { index: 3, postX: 196, postY: 120, buttonX: 160, shaftEndX: 186, nutX: 193, bridgeX: 186, gauge: 1.4 },
-  { index: 4, postX: 224, postY: 70, buttonX: 260, shaftEndX: 239, nutX: 213.4, bridgeX: 214.8, gauge: 1 },
-  { index: 5, postX: 224, postY: 95, buttonX: 260, shaftEndX: 236, nutX: 220.2, bridgeX: 224.4, gauge: 0.85 },
-  { index: 6, postX: 224, postY: 120, buttonX: 260, shaftEndX: 234, nutX: 227, bridgeX: 234, gauge: 0.7 },
+  { index: 1, postX: 196, postY: 60, buttonX: 160, shaftEndX: 181, nutX: 206.6, bridgeX: 205.2, gauge: 1.2 },
+  { index: 2, postX: 196, postY: 94, buttonX: 160, shaftEndX: 184, nutX: 199.8, bridgeX: 195.6, gauge: 1.25 },
+  { index: 3, postX: 196, postY: 128, buttonX: 160, shaftEndX: 186, nutX: 193, bridgeX: 186, gauge: 1.4 },
+  { index: 4, postX: 224, postY: 60, buttonX: 260, shaftEndX: 239, nutX: 213.4, bridgeX: 214.8, gauge: 1 },
+  { index: 5, postX: 224, postY: 94, buttonX: 260, shaftEndX: 236, nutX: 220.2, bridgeX: 224.4, gauge: 0.85 },
+  { index: 6, postX: 224, postY: 128, buttonX: 260, shaftEndX: 234, nutX: 227, bridgeX: 234, gauge: 0.7 },
 ];
 
 // Label baselines for the three rows on each side of the headstock.
-const LABEL_ROWS: readonly number[] = [72, 97, 122];
+const LABEL_ROWS: readonly number[] = [66, 100, 134];
+// Each row's target is ROW_HALF_HEIGHT above and below its label baseline.
+export const ROW_HALF_HEIGHT = 17;
 
 export type GuitarString = StringGeometry & {
   sectionId: ProfileSection['id'];

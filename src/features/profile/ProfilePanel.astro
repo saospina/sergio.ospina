@@ -34,9 +34,16 @@ const ArrowIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
             {section.title}
           </h2>
           <p class={styles.summary}>{section.shortDescription}</p>
-          {paragraphs(section.body).map((paragraph) => (
-            <p class={styles.body}>{paragraph}</p>
-          ))}
+          {section.points ? (
+            <ul class={styles.bullets}>
+              {section.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          ) : (
+            section.body &&
+            paragraphs(section.body).map((paragraph) => <p class={styles.body}>{paragraph}</p>)
+          )}
 
           {section.id === 'about' && (
             <ul class={styles.pills}>

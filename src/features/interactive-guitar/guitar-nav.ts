@@ -6,8 +6,9 @@ export type GuitarNavOptions = {
   playSound: (stringIndex: number) => void;
 };
 
+// Matches the SVG string links and the mobile StringNav chips alike.
 const LINK_SELECTOR = 'a[data-string-index]';
-const ACTIVE_ROOT_MARGIN = '-40% 0px -55% 0px';
+const CHIP_ROOT_SELECTOR = '[data-string-nav]';
 
 function stringIndexOf(link: Element): number | null {
   const raw: string | undefined = (link as HTMLElement | SVGElement).dataset.stringIndex;
@@ -18,20 +19,55 @@ function stringIndexOf(link: Element): number | null {
   return Number.isInteger(index) ? index : null;
 }
 
-// Marks the string for one section. Each string link and mobile label carries
-// the same href, so both are updated together.
-export function setActiveSection(root: HTMLElement, sectionId: string): void {
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+// Restarts the chip's mini-string wobble. The attribute is removed and re-added
+// so the CSS animation runs again on every tap.
+function wobbleChip(chip: HTMLElement): void {
+  if (prefersReducedMotion()) {
+    return;
+  }
+  chip.removeAttribute('data-plucked');
+  void chip.offsetWidth;
+  chip.setAttribute('data-plucked', '');
+}
+
+// Scrolls the chip strip so the active chip sits in the middle. Only the strip
+// moves; the page does not.
+function keepChipVisible(chip: HTMLElement): void {
+  const strip: HTMLElement | null = chip.closest('ul');
+  if (!strip) {
+    return;
+  }
+  const stripBox: DOMRect = strip.getBoundingClientRect();
+  const chipBox: DOMRect = chip.getBoundingClientRect();
+  const left: number =
+    strip.scrollLeft + (chipBox.left - stripBox.left) - (strip.clientWidth - chipBox.width) / 2;
+  strip.scrollTo({ left, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+// Marks the string for one section across the SVG and the mobile chips. Both
+// use the same href, so they are updated together.
+export function setActiveSection(sectionId: string): void {
   const href: string = `#${sectionId}`;
-  for (const link of root.querySelectorAll<HTMLElement | SVGElement>(LINK_SELECTOR)) {
-    if (link.getAttribute('href') === href) {
-      link.setAttribute('aria-current', 'true');
-    } else {
+  for (const link of document.querySelectorAll<HTMLElement | SVGElement>(LINK_SELECTOR)) {
+    if (link.getAttribute('href') !== href) {
       link.removeAttribute('aria-current');
+      continue;
+    }
+    if (link.getAttribute('aria-current') === 'true') {
+      continue;
+    }
+    link.setAttribute('aria-current', 'true');
+    if (link instanceof HTMLElement && link.closest(CHIP_ROOT_SELECTOR)) {
+      keepChipVisible(link);
     }
   }
 }
 
-export function bindGuitarNav(root: HTMLElement, options: GuitarNavOptions): void {
+export function bindGuitarNav(options: GuitarNavOptions): void {
   let hasInteracted: boolean = false;
   const markInteracted = (): void => {
     hasInteracted = true;
@@ -39,11 +75,12 @@ export function bindGuitarNav(root: HTMLElement, options: GuitarNavOptions): voi
   document.addEventListener('pointerdown', markInteracted, { passive: true });
   document.addEventListener('keydown', markInteracted);
 
-  for (const link of root.querySelectorAll<HTMLElement | SVGElement>(LINK_SELECTOR)) {
+  for (const link of document.querySelectorAll<HTMLElement | SVGElement>(LINK_SELECTOR)) {
     const stringIndex: number | null = stringIndexOf(link);
     if (stringIndex === null) {
       continue;
     }
+    const isChip: boolean = link.closest(CHIP_ROOT_SELECTOR) !== null;
 
     link.addEventListener('pointerenter', (event: Event): void => {
       if ((event as PointerEvent).pointerType !== 'mouse') {
@@ -65,45 +102,19 @@ export function bindGuitarNav(root: HTMLElement, options: GuitarNavOptions): voi
       }
     });
 
+    // A tap plucks and plays. The native anchor still scrolls to the section,
+    // so the links work without JavaScript; this only adds the feedback.
     link.addEventListener('click', (): void => {
       hasInteracted = true;
       pluckString(stringIndex);
       options.playSound(stringIndex);
+      if (link instanceof HTMLElement && isChip) {
+        wobbleChip(link);
+      }
       const href: string | null = link.getAttribute('href');
       if (href) {
-        setActiveSection(root, href.slice(1));
+        setActiveSection(href.slice(1));
       }
     });
   }
-}
-
-// Watches the stacked sections and marks the string whose section crosses the
-// reading band in the middle of the viewport.
-export function watchActiveSection(root: HTMLElement): () => void {
-  if (!('IntersectionObserver' in window)) {
-    return (): void => {};
-  }
-
-  const observer: IntersectionObserver = new IntersectionObserver(
-    (entries: IntersectionObserverEntry[]): void => {
-      for (const entry of entries) {
-        const sectionId: string | undefined =
-          entry.isIntersecting && entry.target instanceof HTMLElement
-            ? entry.target.dataset.sectionId
-            : undefined;
-        if (sectionId) {
-          setActiveSection(root, sectionId);
-        }
-      }
-    },
-    { rootMargin: ACTIVE_ROOT_MARGIN },
-  );
-
-  for (const section of document.querySelectorAll<HTMLElement>('[data-section-id]')) {
-    observer.observe(section);
-  }
-
-  return (): void => {
-    observer.disconnect();
-  };
 }

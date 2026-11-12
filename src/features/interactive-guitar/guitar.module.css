@@ -1,8 +1,10 @@
 /*
  * Desktop: the 420 x 780 guitar stands in the left column at a height that
- * fits the viewport. Mobile (below 860px): the same SVG is rotated -90deg
- * inside .stage so the headstock sits on the left and the neck runs across
- * as a horizontal strip. Labels move to the HTML rows above and below it.
+ * fits the viewport. Each string's row is a full-width target (.halo), so the
+ * gaps between labels are not dead space.
+ * Mobile (below 860px): the same SVG is rotated -90deg inside .stage so the
+ * neck runs across as a horizontal strip. It is decorative there; StringNav
+ * carries the section links.
  */
 .guitar {
   position: relative;
@@ -46,12 +48,13 @@
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .hit {
   fill: none;
   stroke: transparent;
-  stroke-width: 16px;
+  stroke-width: 10px;
   pointer-events: stroke;
 }
 
@@ -100,13 +103,18 @@
   transition: fill 180ms ease;
 }
 
+/* Row target: transparent but clickable across the whole label band. */
 .halo {
-  fill: none;
+  fill: transparent;
   stroke: none;
+  pointer-events: all;
 }
 
-.string:hover .stringLine {
-  stroke-opacity: 1;
+/* Hover only exists with a pointer. Touch uses the tap-to-pluck path. */
+@media (hover: hover) {
+  .string:hover .stringLine {
+    stroke-opacity: 1;
+  }
 }
 
 .string:focus-visible .halo {
@@ -136,40 +144,6 @@
 .string[aria-current='true'] .name,
 .string[aria-current='true'] .note {
   fill: #e0a04a;
-}
-
-/* Mobile label rows are hidden on desktop. */
-.mobileLabels {
-  display: none;
-}
-
-.mobileName,
-.mobileNote {
-  display: block;
-}
-
-.mobileName {
-  font-family: var(--display);
-  font-size: 0.95rem;
-  color: #e9e4d8;
-}
-
-.mobileNote {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: #a9b0a9;
-}
-
-.mobileLabels a {
-  display: block;
-  min-height: 44px;
-  padding: 0.25rem 0.1rem;
-  text-decoration: none;
-}
-
-.mobileLabels a[aria-current='true'] .mobileName,
-.mobileLabels a[aria-current='true'] .mobileNote {
-  color: #e0a04a;
 }
 
 @media (max-width: 859px) {
@@ -202,20 +176,6 @@
   .note {
     display: none;
   }
-
-  .mobileLabels {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-align: center;
-  }
-
-  .mobileLabelsTop {
-    order: -1;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -224,8 +184,7 @@
   .button,
   .post,
   .name,
-  .note,
-  .mobileLabels a {
+  .note {
     transition: none;
   }
 }

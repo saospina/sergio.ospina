@@ -126,6 +126,11 @@
 }
 
 @media (max-width: 859px) {
+  /* Keeps focus and in-page anchors from landing under the sticky string bar. */
+  :global(html) {
+    scroll-padding-top: 5.5rem;
+  }
+
   .page {
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
