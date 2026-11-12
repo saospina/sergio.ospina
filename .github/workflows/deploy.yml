@@ -1,7 +1,11 @@
 name: Deploy to GitHub Pages
 
+# pull_request_target runs with the base ref (master), which the github-pages
+# environment's branch policy allows. A plain pull_request run uses
+# refs/pull/<n>/merge and is rejected. See commit 3df6cdd.
 on:
-  push:
+  pull_request_target:
+    types: [closed]
     branches: [master]
 
 permissions:
@@ -15,13 +19,17 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
+      - name: Check out merged pull request
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
