@@ -22,7 +22,7 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
   - `profile/` — all copy and data live in `profile.ts`; string index → section mapping is `getSectionByStringIndex`.
 - Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
 - `public/img/home.jpeg` is used only as the darkened full-page background (`--background-image`). Keep the layout text-first; no photo hero.
-- Guitar/audio work follows the repo-local skill `.opencode/skills/interactive-guitar-web/SKILL.md`. It sets `disable-model-invocation: true`, so load it explicitly when touching that feature.
+- Guitar/audio work follows the repo-local skill `.claude/skills/interactive-guitar-web/SKILL.md`. It sets `disable-model-invocation: true`, so load it explicitly when touching that feature.
 
 ## Content
 
