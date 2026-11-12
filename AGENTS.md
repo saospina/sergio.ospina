@@ -8,6 +8,7 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 - `npm run build` — production build; run after every change
 - `npm run preview` — serve `dist/`
 - Deploy (`.github/workflows/deploy.yml`) runs only when a PR is **merged into `master`** (it checks out the merge commit). No push or `workflow_dispatch` trigger exists. Uses Node 20 and `npm ci`; keep `package-lock.json` in sync.
+- The trigger is `pull_request_target`, not `pull_request`, on purpose. Plain `pull_request` runs use `refs/pull/<n>/merge`, which the `github-pages` environment rejects. Do not change it back without rechecking that policy.
 
 ## Deploy
 
