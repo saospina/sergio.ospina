@@ -27,6 +27,6 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 
 ## Content
 
-- Public name is Antonio Ospina. Links are LinkedIn, GitHub, and Medium only. Do not publish an email.
+- Public name is Antonio Ospina. Links are LinkedIn, GitHub, and Medium, plus the WhatsApp CTA (`whatsapp` in `profile.ts`, username `ospinasa.music`). Do not publish an email or phone number.
 - Keep the existing gtag snippet (`G-V3TGD1L0Z4`).
 - The EPAM Frontend Developer role ends Jan 2026, when Frontend Tech Lead starts. Do not mark both Present.
