@@ -91,7 +91,6 @@
 }
 
 .list,
-.links,
 .bullets {
   margin: 0.5rem 0 0;
   padding: 0;
@@ -109,7 +108,6 @@
 }
 
 .list li,
-.links li,
 .bullets li {
   position: relative;
   padding: 0.25rem 0 0.25rem 1.1rem;
@@ -121,7 +119,6 @@
 
 /* Amber dot marker; padding-left reserves room so wrapped lines stay aligned. */
 .list li::before,
-.links li::before,
 .bullets li::before {
   content: '';
   position: absolute;
@@ -131,16 +128,6 @@
   height: 5px;
   border-radius: 50%;
   background: #e0a04a;
-}
-
-.links a {
-  color: #e9e4d8;
-  text-decoration-color: #3a403b;
-  text-underline-offset: 4px;
-}
-
-.links a:hover {
-  color: #e0a04a;
 }
 
 .pills {
@@ -176,8 +163,83 @@
   color: #e0a04a;
 }
 
-.links a:focus-visible,
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 28rem;
+  margin-top: 2rem;
+  padding: 16px 20px;
+  border: 1px solid #3a403b;
+  border-radius: 16px;
+  background: rgba(224, 160, 74, 0.08);
+  color: #e9e4d8;
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.contactCard:hover {
+  border-color: #e0a04a;
+  background: rgba(224, 160, 74, 0.14);
+}
+
+.contactIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0a04a;
+  color: #14170f;
+}
+
+.contactIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contactText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contactTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: #e9e4d8;
+}
+
+.contactHandle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #a9b0a9;
+}
+
+.contactCard > svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  transition: transform 180ms ease;
+}
+
+.contactCard:hover > svg {
+  transform: translateX(3px);
+}
+
+.contactCard:hover .contactTitle {
+  color: #e0a04a;
+}
+
 .pill:focus-visible,
+.contactCard:focus-visible,
 .next:focus-visible {
   outline: 2px solid #e0a04a;
   outline-offset: 3px;
@@ -242,7 +304,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .next svg {
+  .next svg,
+  .contactCard,
+  .contactCard > svg {
     transition: none;
   }
 }

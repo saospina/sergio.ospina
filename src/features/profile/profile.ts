@@ -9,6 +9,12 @@ export const links = [
   { label: 'Medium', href: 'https://medium.com/@sergos0617' },
 ] as const;
 
+export const whatsapp = {
+  label: 'Message me on WhatsApp',
+  handle: 'ospinasa.music',
+  href: 'https://wa.me/ospinasa.music',
+} as const;
+
 export type ProfileLink = (typeof links)[number];
 
 export type ExperienceRole = {
@@ -223,8 +229,8 @@ export const sections: ProfileSection[] = [
     title: 'Contact',
     navLabel: 'Contact',
     note: 'E4',
-    shortDescription: 'LinkedIn, GitHub, and Medium.',
-    body: 'Published profiles available.',
+    shortDescription: 'WhatsApp, LinkedIn, GitHub, and Medium.',
+    body: 'The fastest way to reach me is WhatsApp. Social profiles are below.',
     accentColor: accent,
     stringIndex: 6,
   },
