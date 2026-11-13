@@ -3,13 +3,32 @@ import AudioControls from '../features/audio-experience/AudioControls.astro';
 import Guitar from '../features/interactive-guitar/Guitar.astro';
 import StringNav from '../features/interactive-guitar/StringNav.astro';
 import ProfilePanel from '../features/profile/ProfilePanel.astro';
-import SiteNotice from '../features/site-notice/SiteNotice.astro';
-import { description, displayName, headline } from '../features/profile/profile';
+import {
+  description,
+  displayName,
+  guitarCaption,
+  headline,
+  links,
+  pageTitle,
+  tagline,
+} from '../features/profile/profile';
 import styles from '../styles/home.module.css';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+const canonical: string = new URL(base, Astro.site).href;
+const linkedIn: string = links.find((link) => link.label === 'LinkedIn')?.href ?? '';
+const person: string = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: displayName,
+  jobTitle: 'Frontend Tech Lead',
+  worksFor: { '@type': 'Organization', name: 'EPAM Systems' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Medellín', addressCountry: 'CO' },
+  url: canonical,
+  sameAs: links.map((link) => link.href),
+});
 ---
 
 <!doctype html>
@@ -18,7 +37,16 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <title>{displayName}</title>
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <script type="application/ld+json" set:html={person} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -35,10 +63,10 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   </head>
   <body>
     <a class={styles.skip} href="#profile">Skip to profile</a>
-    <SiteNotice />
     <main class={styles.page} style={`--background-image: url('${base}img/home.jpeg')`}>
       <div class={styles.instrument}>
         <Guitar />
+        <p class={styles.caption}>{guitarCaption}</p>
         <AudioControls />
       </div>
       <StringNav />
@@ -46,6 +74,12 @@ const base = import.meta.env.BASE_URL.endsWith('/')
         <header>
           <p class={styles.kicker}>{headline}</p>
           <h1 class={styles.title}>Antonio<br />Ospina</h1>
+          <p class={styles.tagline}>{tagline}</p>
+          <ul class={styles.ctas}>
+            <li><a class:list={[styles.cta, styles.ctaPrimary]} href="#experience">View experience</a></li>
+            <li><a class={styles.cta} href={linkedIn} target="_blank" rel="noreferrer">LinkedIn</a></li>
+            <li><a class={styles.cta} href="#contact">Contact</a></li>
+          </ul>
         </header>
         <div class={styles.intro}>
           <ProfilePanel />
