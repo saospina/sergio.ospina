@@ -5,6 +5,7 @@ import {
   experience,
   links,
   sections,
+  selectedWork,
   skills,
   whatsapp,
   type ProfileSection,
@@ -31,7 +32,7 @@ const WhatsAppIcon = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="
           class:list={[styles.section, isPlaceholder && styles.placeholder]}
           aria-labelledby={`${section.id}-title`}
         >
-          <p class={styles.eyebrow}>{`0${section.stringIndex} · ${section.note}`}</p>
+          <p class={styles.eyebrow}>{`0${section.stringIndex} · ${section.navLabel}`}</p>
           <h2 id={`${section.id}-title`} class={styles.title}>
             {section.title}
           </h2>
@@ -114,8 +115,34 @@ const WhatsAppIcon = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="
             </div>
           )}
 
+          {section.id === 'projects' && (
+            <div>
+              {selectedWork.map((item) => (
+                <section class={styles.job}>
+                  <h3 class={styles.roleTitle}>{item.title}</h3>
+                  <p class={styles.meta}>{item.context}</p>
+                  <ul class={styles.list}>
+                    {item.points.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          )}
+
           {section.id === 'contact' && (
             <>
+              <ul class={styles.pills}>
+                {links.map((link) => (
+                  <li>
+                    <a href={link.href} target="_blank" rel="noreferrer" class={styles.pill}>
+                      {link.label}
+                      <Fragment set:html={ArrowIcon} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
               <a
                 href={whatsapp.href}
                 target="_blank"
@@ -131,23 +158,12 @@ const WhatsAppIcon = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="
                 </span>
                 <Fragment set:html={ArrowIcon} />
               </a>
-              <h3 class={styles.groupLabel}>Elsewhere</h3>
-              <ul class={styles.pills}>
-                {links.map((link) => (
-                  <li>
-                    <a href={link.href} target="_blank" rel="noreferrer" class={styles.pill}>
-                      {link.label}
-                      <Fragment set:html={ArrowIcon} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
             </>
           )}
 
           {next && (
             <a class={styles.next} href={`#${next.id}`}>
-              <span class={styles.nextMeta}>{`Next string · 0${next.stringIndex} · ${next.note}`}</span>
+              <span class={styles.nextMeta}>{`Next · string 0${next.stringIndex}`}</span>
               <span class={styles.nextName}>{next.title}</span>
               <Fragment set:html={ArrowIcon} />
             </a>

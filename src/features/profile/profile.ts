@@ -41,6 +41,12 @@ export type EducationItem = {
   period: string;
 };
 
+export type WorkItem = {
+  title: string;
+  context: string;
+  points: string[];
+};
+
 export type ProfileSection = {
   id: 'about' | 'skills' | 'experience' | 'projects' | 'interests' | 'contact';
   title: string;
@@ -53,7 +59,14 @@ export type ProfileSection = {
   note: string;
 };
 
-export const headline = 'Frontend Tech Lead · Medellín';
+export const headline = 'Frontend Tech Lead · EPAM Systems · Medellín, Colombia';
+
+export const pageTitle = 'Antonio Ospina — Frontend Tech Lead (React, Next.js)';
+
+export const tagline =
+  'I lead frontend engineering for Copa Airlines’ booking and payments platform. 10+ years in software, from QA automation to tech leadership.';
+
+export const guitarCaption = 'This is my résumé. Each string opens a section: pluck one, or just scroll.';
 
 export const experience: ExperienceJob[] = [
   {
@@ -157,6 +170,33 @@ export const education: EducationItem[] = [
   },
 ];
 
+export const selectedWork: WorkItem[] = [
+  {
+    title: 'Payments in the Copa Airlines booking flow',
+    context: 'EPAM Systems · React, Redux, Next.js',
+    points: [
+      'Shipped Uplift, PayPal, PSE, SafetyPay, and card payments in the booking flow.',
+      'Integrated each provider into one checkout on React, Redux, and Next.js.',
+    ],
+  },
+  {
+    title: 'Growing the frontend team',
+    context: 'EPAM Systems · Frontend Tech Lead',
+    points: [
+      'Set coding standards, run reviews, and manage technical debt.',
+      'Mentored developers. Two engineers have grown into senior roles.',
+    ],
+  },
+  {
+    title: 'This site',
+    context: 'Astro, inline SVG, GSAP, Web Audio',
+    points: [
+      'A static Astro page with a hand-built SVG guitar as the section navigation.',
+      'Sound is optional and never autoplays. Mobile gets a plain section bar, and every section is reachable by keyboard.',
+    ],
+  },
+];
+
 export const certifications = [
   'Learning the OWASP Top 10',
   'Foundational JavaScript Security',
@@ -186,41 +226,40 @@ export const sections: ProfileSection[] = [
     stringIndex: 1,
   },
   {
-    id: 'skills',
-    title: 'Skills',
-    navLabel: 'Skills',
-    note: 'A2',
-    shortDescription: 'React, Next.js, React Native, and TypeScript.',
-    body: 'Frontend, quality, and practice.',
-    accentColor: accent,
-    stringIndex: 2,
-  },
-  {
     id: 'experience',
     title: 'Experience',
     navLabel: 'Experience',
-    note: 'E2',
-    shortDescription: 'Frontend Tech Lead since Jan 2026. Frontend Developer ended Jan 2026.',
+    note: 'A2',
+    shortDescription: 'Six years at EPAM: QA Engineer, then Frontend Developer, now Frontend Tech Lead.',
     accentColor: ink,
+    stringIndex: 2,
+  },
+  {
+    id: 'skills',
+    title: 'Skills',
+    navLabel: 'Skills',
+    note: 'E2',
+    shortDescription: 'React, Next.js, React Native, and TypeScript.',
+    body: 'Frontend, quality, and practice.',
+    accentColor: accent,
     stringIndex: 3,
   },
   {
     id: 'projects',
-    title: 'Projects',
-    navLabel: 'Projects',
+    title: 'Selected Work',
+    navLabel: 'Work',
     note: 'G3',
-    shortDescription: 'Placeholder',
-    body: 'Placeholder: no projects are listed in the existing site or resume.',
+    shortDescription: 'What I have shipped and built.',
     accentColor: muted,
     stringIndex: 4,
   },
   {
     id: 'interests',
-    title: 'Interests',
-    navLabel: 'Interests',
+    title: 'Off the Clock',
+    navLabel: 'Hobby',
     note: 'B3',
-    shortDescription: 'Placeholder',
-    body: 'Placeholder: no interests are listed in the existing site or resume.',
+    shortDescription: 'Why there is a guitar on my résumé.',
+    body: 'I play guitar. It is my hobby, so I built this résumé around one: each string opens a section.\n\nThe page is still a résumé first. Everything works without sound, and you can read it top to bottom without touching a string.',
     accentColor: muted,
     stringIndex: 5,
   },
@@ -229,8 +268,8 @@ export const sections: ProfileSection[] = [
     title: 'Contact',
     navLabel: 'Contact',
     note: 'E4',
-    shortDescription: 'WhatsApp, LinkedIn, GitHub, and Medium.',
-    body: 'The fastest way to reach me is WhatsApp. Social profiles are below.',
+    shortDescription: 'LinkedIn, WhatsApp, GitHub, and Medium.',
+    body: 'LinkedIn is the best place for roles and introductions. For a quick message, use WhatsApp.',
     accentColor: accent,
     stringIndex: 6,
   },
