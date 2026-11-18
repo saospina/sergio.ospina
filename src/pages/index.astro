@@ -3,7 +3,9 @@ import AudioControls from '../features/audio-experience/AudioControls.astro';
 import Guitar from '../features/interactive-guitar/Guitar.astro';
 import StringNav from '../features/interactive-guitar/StringNav.astro';
 import ProfilePanel from '../features/profile/ProfilePanel.astro';
+import { getCvSize } from '../features/profile/cv-file';
 import {
+  cv,
   description,
   displayName,
   guitarCaption,
@@ -18,6 +20,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const canonical: string = new URL(base, Astro.site).href;
+const cvSize: string = getCvSize();
+const DownloadIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>`;
 const linkedIn: string = links.find((link) => link.label === 'LinkedIn')?.href ?? '';
 const person: string = JSON.stringify({
   '@context': 'https://schema.org',
@@ -77,6 +81,19 @@ const person: string = JSON.stringify({
           <p class={styles.tagline}>{tagline}</p>
           <ul class={styles.ctas}>
             <li><a class:list={[styles.cta, styles.ctaPrimary]} href="#experience">View experience</a></li>
+            <li>
+              <a
+                class={styles.cta}
+                href={`${base}${cv.path}`}
+                download={cv.fileName}
+                type="application/pdf"
+                data-cv-download
+              >
+                <Fragment set:html={DownloadIcon} />
+                {cv.label}
+                <span class={styles.ctaMeta}>PDF · {cvSize}</span>
+              </a>
+            </li>
             <li><a class={styles.cta} href={linkedIn} target="_blank" rel="noreferrer">LinkedIn</a></li>
             <li><a class={styles.cta} href="#contact">Contact</a></li>
           </ul>
@@ -123,6 +140,20 @@ const person: string = JSON.stringify({
       if (controls instanceof HTMLElement) {
         bindAudioControls(controls, guitarAudio);
       }
+
+      // gtag may be missing when an ad blocker drops the analytics script.
+      document.addEventListener('click', (event: MouseEvent): void => {
+        const target: EventTarget | null = event.target;
+        const link: HTMLAnchorElement | null =
+          target instanceof Element ? target.closest<HTMLAnchorElement>('a[data-cv-download]') : null;
+        const gtag: unknown = (window as { gtag?: unknown }).gtag;
+        if (link && typeof gtag === 'function') {
+          gtag('event', 'file_download', {
+            file_name: link.getAttribute('download'),
+            link_url: link.href,
+          });
+        }
+      });
 
       window.addEventListener('pagehide', (event: PageTransitionEvent): void => {
         resetStrings();

@@ -180,6 +180,10 @@
     background-color 180ms ease;
 }
 
+.contactCard + .contactCard {
+  margin-top: 12px;
+}
+
 .contactCard:hover {
   border-color: #e0a04a;
   background: rgba(224, 160, 74, 0.14);
