@@ -15,6 +15,14 @@ export const whatsapp = {
   href: 'https://wa.me/ospinasa.music',
 } as const;
 
+// The PDF lives in public/; bump `updated` whenever the file changes.
+export const cv = {
+  label: 'Download CV',
+  path: 'cv/antonio-ospina-cv.pdf',
+  fileName: 'Antonio-Ospina-CV.pdf',
+  updated: 'Nov 2026',
+} as const;
+
 export type ProfileLink = (typeof links)[number];
 
 export type ExperienceRole = {
@@ -268,7 +276,7 @@ export const sections: ProfileSection[] = [
     title: 'Contact',
     navLabel: 'Contact',
     note: 'E4',
-    shortDescription: 'LinkedIn, WhatsApp, GitHub, and Medium.',
+    shortDescription: 'LinkedIn, WhatsApp, GitHub, Medium, or download my CV.',
     body: 'LinkedIn is the best place for roles and introductions. For a quick message, use WhatsApp.',
     accentColor: accent,
     stringIndex: 6,
