@@ -41,8 +41,6 @@ export function bindAudioControls(root: HTMLElement, engine: GuitarAudioEngine):
   const slider: HTMLInputElement | null = root.querySelector<HTMLInputElement>('[data-volume]');
   const mute: HTMLButtonElement | null = root.querySelector<HTMLButtonElement>('[data-mute]');
   const status: HTMLElement | null = root.querySelector<HTMLElement>('[data-audio-status]');
-  const iconOn: SVGElement | null = root.querySelector<SVGElement>('[data-icon-on]');
-  const iconOff: SVGElement | null = root.querySelector<SVGElement>('[data-icon-off]');
   root.hidden = false;
 
   const stopUnavailable: () => void = engine.onUnavailable((): void => {
@@ -66,8 +64,6 @@ export function bindAudioControls(root: HTMLElement, engine: GuitarAudioEngine):
   function renderMute(): void {
     mute?.setAttribute('aria-pressed', String(muted));
     mute?.setAttribute('aria-label', muted ? 'Unmute sound' : 'Mute sound');
-    iconOn?.toggleAttribute('hidden', muted);
-    iconOff?.toggleAttribute('hidden', !muted);
   }
 
   engine.setVolume(currentVolume() / 100);

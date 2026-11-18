@@ -42,6 +42,15 @@
   height: 18px;
 }
 
+.cross,
+.mute[aria-pressed='true'] .waves {
+  display: none;
+}
+
+.mute[aria-pressed='true'] .cross {
+  display: inline;
+}
+
 .vol {
   flex: 0 0 auto;
   font-family: 'JetBrains Mono', monospace;
