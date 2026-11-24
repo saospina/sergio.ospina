@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Personal site for Antonio Ospina. One static Astro 5 page. No unit tests or lint; verify with `npm run check` (typecheck) and `npm run build`.
+Personal site for Antonio Ospina. One static Astro 7 page (needs Node ≥ 22.23; CI and deploy use Node 24). No unit tests or lint; verify with `npm run check` (typecheck) and `npm run build`.
 
 ## Commands
 
@@ -27,6 +27,7 @@ Personal site for Antonio Ospina. One static Astro 5 page. No unit tests or lint
   - `profile/` — all copy and data live in `profile.ts` (`currentRole` and `homeLocation` feed the headline and the JSON-LD); string index → section mapping is `getSectionByStringIndex`. `ProfilePanel.astro` renders the shared section shell; per-section content lives in `sections/*Extras.astro`, mapped by section id.
   - `site-notice/` — the "Under construction" banner at the top of the page (hidden in print).
 - `src/shared/` holds cross-feature helpers: `assetUrl()` / `BASE` (`asset-url.ts`), inline SVG icons (`icons.ts`), and `prefersReducedMotion()` (`motion.ts`). Build public asset URLs with `assetUrl()`.
+- Astro 7 defaults to `compressHTML: 'jsx'`: whitespace that spans a line break between inline elements is dropped. Write `{' '}` where a space must survive (see `SiteNotice.astro`).
 - Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
 - `src/assets/home.jpeg` is used only as the darkened full-page background. `index.astro` turns it into AVIF + WebP with `getImage()` and passes `--background-image` / `--background-fallback`. Keep the layout text-first; no photo hero.
 - Fonts are self-hosted with `@fontsource/*` (Latin, 400/500), imported in `index.astro`. Do not add Google Fonts links back.
