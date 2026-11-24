@@ -1,11 +1,11 @@
 name: Deploy to GitHub Pages
 
-# pull_request_target runs with the base ref (master), which the github-pages
-# environment's branch policy allows. A plain pull_request run uses
-# refs/pull/<n>/merge and is rejected. See commit 3df6cdd.
+# Runs on pushes to master, which happen only when a PR is merged. The run uses
+# refs/heads/master, which the github-pages environment's branch policy allows.
+# Do not switch to pull_request (refs/pull/<n>/merge is rejected) or back to
+# pull_request_target (restricted on public repos from 2026-12-02).
 on:
-  pull_request_target:
-    types: [closed]
+  push:
     branches: [master]
 
 permissions:
@@ -15,42 +15,46 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    if: github.event.pull_request.merged == true
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out merged pull request
-        uses: actions/checkout@v4
+      - name: Check out master
+        uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build Astro site
         run: npm run build
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
+  # A separate job only starts after the artifact is fully finalized, which
+  # avoids the "No artifacts named github-pages" race seen in a single job.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
