@@ -77,10 +77,18 @@
   grid-template-columns: 440px minmax(0, 1fr);
   gap: 72px;
   align-items: start;
-  background-image: linear-gradient(rgba(13, 17, 15, 0.75), rgba(13, 17, 15, 0.75)), var(--background-image);
+  background-image: linear-gradient(rgba(13, 17, 15, 0.75), rgba(13, 17, 15, 0.75)), var(--background-fallback);
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
+}
+
+/* A plain second declaration cannot act as the fallback: with var(), an
+   unsupported image-set() fails at computed-value time and drops to none. */
+@supports (background-image: image-set(url('x.avif') type('image/avif'))) {
+  .page {
+    background-image: linear-gradient(rgba(13, 17, 15, 0.75), rgba(13, 17, 15, 0.75)), var(--background-image);
+  }
 }
 
 .instrument {
@@ -228,5 +236,72 @@
 
   .intro {
     margin-top: 40px;
+  }
+}
+
+/* Print: a plain light résumé. The guitar, nav and buttons are screen-only,
+   and colors are forced because the profile styles hard-code light-on-dark. */
+@media print {
+  :global(*) {
+    color: #111 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  :global(html),
+  :global(body) {
+    background: #fff !important;
+  }
+
+  .page {
+    display: block;
+    max-width: none;
+    padding: 0;
+    background-image: none !important;
+  }
+
+  .instrument,
+  .ctas,
+  .skip,
+  :global([data-string-nav]),
+  :global([data-track='next']) {
+    display: none !important;
+  }
+
+  .content {
+    max-width: none;
+    padding-top: 0;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .intro {
+    margin-top: 24px;
+  }
+
+  /* List dots are painted backgrounds, which print drops by default. */
+  :global(li)::before {
+    background: #111 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  :global(article) {
+    break-inside: auto;
+  }
+
+  :global(h2),
+  :global(h3),
+  :global(h4) {
+    break-after: avoid;
+  }
+
+  :global(a[href^='http'])::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    word-break: break-all;
   }
 }

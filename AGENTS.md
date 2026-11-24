@@ -20,10 +20,11 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 
 - `src/pages/index.astro` is the only page; it wires three features under `src/features/`:
   - `interactive-guitar/` — inline SVG guitar, GSAP motion (`guitar-motion.ts`, `guitar-controller.ts`)
-  - `audio-experience/` — Web Audio engine + controls. MP3 samples (`public/audio/guitar/string-N.mp3`) are **not committed** (dir holds only `.gitkeep`); missing samples fall back to synthesized plucks (`fallbackFrequency` in `sources.ts`). Audio must never autoplay and the experience must work without it.
+  - `audio-experience/` — Web Audio engine + controls. MP3 samples (`public/audio/guitar/string-N.mp3`) are **not committed** (dir holds only `.gitkeep`), so `SAMPLES_ENABLED` in `sources.ts` is `false` and nothing is fetched; plucks are synthesized (`fallbackFrequency`). Set it to `true` only after adding all six files. Audio must never autoplay and the experience must work without it.
   - `profile/` — all copy and data live in `profile.ts`; string index → section mapping is `getSectionByStringIndex`.
 - Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
-- `public/img/home.jpeg` is used only as the darkened full-page background (`--background-image`). Keep the layout text-first; no photo hero.
+- `src/assets/home.jpeg` is used only as the darkened full-page background. `index.astro` turns it into AVIF + WebP with `getImage()` and passes `--background-image` / `--background-fallback`. Keep the layout text-first; no photo hero.
+- Fonts are self-hosted with `@fontsource/*` (Latin, 400/500), imported in `index.astro`. Do not add Google Fonts links back.
 - Guitar/audio work follows the repo-local skill `.claude/skills/interactive-guitar-web/SKILL.md`. It sets `disable-model-invocation: true`, so load it explicitly when touching that feature.
 
 ## Content

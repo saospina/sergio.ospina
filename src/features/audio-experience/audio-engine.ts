@@ -1,5 +1,6 @@
 import {
   DEFAULT_VOLUME,
+  SAMPLES_ENABLED,
   STRING_COUNT,
   fallbackFrequency,
   stringAudioPath,
@@ -104,7 +105,7 @@ class WebGuitarAudio implements GuitarAudioEngine {
   }
 
   private async loadAll(): Promise<void> {
-    if (!this.ensureContext()) {
+    if (!SAMPLES_ENABLED || !this.ensureContext()) {
       return;
     }
     const loads: Promise<void>[] = [];
@@ -119,8 +120,12 @@ class WebGuitarAudio implements GuitarAudioEngine {
       return null;
     }
     if (this.context?.state === 'closed') {
-      this.markFailed();
-      return null;
+      // The browser closed the context without dispose(). Start a new one.
+      // Decoded AudioBuffers are not tied to a context, so they are kept.
+      this.master?.disconnect();
+      this.context = null;
+      this.master = null;
+      this.initTask = null;
     }
     if (!this.context) {
       if (typeof window.AudioContext !== 'function') {
@@ -139,10 +144,10 @@ class WebGuitarAudio implements GuitarAudioEngine {
         return null;
       }
     }
-    if (this.context.state === 'suspended') {
-      void this.context.resume().catch(() => {
-        this.markFailed();
-      });
+    // Covers 'suspended' and iOS 'interrupted'. A rejected resume is not a
+    // permanent failure: the next gesture calls this again and retries.
+    if (this.context.state !== 'running') {
+      void this.context.resume().catch(() => {});
     }
     return this.context;
   }
