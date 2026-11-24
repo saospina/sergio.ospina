@@ -7,8 +7,9 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 - `npm run dev` — local server
 - `npm run build` — production build; run after every change
 - `npm run preview` — serve `dist/`
-- Deploy (`.github/workflows/deploy.yml`) runs only when a PR is **merged into `master`** (it checks out the merge commit). No push or `workflow_dispatch` trigger exists. Uses Node 20 and `npm ci`; keep `package-lock.json` in sync.
-- The trigger is `pull_request_target`, not `pull_request`, on purpose. Plain `pull_request` runs use `refs/pull/<n>/merge`, which the `github-pages` environment rejects. Do not change it back without rechecking that policy.
+- Deploy (`.github/workflows/deploy.yml`) runs on **push to `master`**, which only happens when a PR is merged. It has two jobs: `build` uploads the Pages artifact and `deploy` publishes it. Keeping them separate avoids a race where `deploy-pages` cannot find the artifact. Uses Node 24 and `npm ci`; keep `package-lock.json` in sync.
+- Do not switch the trigger to `pull_request` (its `refs/pull/<n>/merge` ref is rejected by the `github-pages` environment, which only allows `master`) or back to `pull_request_target` (GitHub restricts it on public repos from 2026-12-02).
+- If only `deploy` fails, use "Re-run failed jobs": it reuses the existing artifact. "Re-run all jobs" uploads a second `github-pages` artifact to the same run and `deploy-pages` then fails with "Multiple artifacts"; delete the old one first (`gh api -X DELETE repos/saospina/sergio.ospina/actions/artifacts/<id>`).
 
 ## Deploy
 
