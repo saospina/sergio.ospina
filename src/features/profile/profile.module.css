@@ -60,12 +60,6 @@
   color: #a9b0a9;
 }
 
-.placeholder .summary,
-.placeholder .body {
-  font-style: italic;
-  color: #a9b0a9;
-}
-
 .groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

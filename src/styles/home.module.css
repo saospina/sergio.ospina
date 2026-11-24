@@ -265,6 +265,7 @@
   .ctas,
   .skip,
   :global([data-string-nav]),
+  :global([data-site-notice]),
   :global([data-track='next']) {
     display: none !important;
   }

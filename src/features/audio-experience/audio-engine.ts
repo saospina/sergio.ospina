@@ -68,6 +68,10 @@ class WebGuitarAudio implements GuitarAudioEngine {
     this.applyGain();
   }
 
+  isAudible(): boolean {
+    return !this.muted && !this.failed && !this.disposed && this.volume > 0;
+  }
+
   onUnavailable(listener: () => void): () => void {
     this.unavailableListeners.add(listener);
     if (this.failed) {

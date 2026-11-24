@@ -2,8 +2,7 @@ import { sections, type ProfileSection } from '../profile/profile';
 
 // Geometry for the 420 x 780 guitar. Every string runs from its tuner post,
 // over the nut at NUT_Y, to the bridge at BRIDGE_Y. Rows are 34 units apart so
-// each label target is at least 34px tall on desktop. The row values are newer
-// than docs/design/guitar-nav-design.html, which uses the old 25-unit pitch.
+// each label target is at least 34px tall on desktop.
 export const NUT_Y = 150;
 export const BRIDGE_Y = 655;
 const BODY_CONTROL_Y = 402.5;

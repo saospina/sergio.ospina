@@ -1,40 +1,43 @@
 ---
-import { getCvSize } from './cv-file';
-import {
-  certifications,
-  cv,
-  education,
-  experience,
-  links,
-  sections,
-  selectedWork,
-  skills,
-  whatsapp,
-  type ProfileSection,
-} from './profile';
+import { ArrowIcon } from '../../shared/icons';
+import { sections, type ProfileSection } from './profile';
 import styles from './profile.module.css';
+import AboutExtras from './sections/AboutExtras.astro';
+import ContactExtras from './sections/ContactExtras.astro';
+import ExperienceExtras from './sections/ExperienceExtras.astro';
+import SkillsExtras from './sections/SkillsExtras.astro';
+import WorkExtras from './sections/WorkExtras.astro';
+
+// Content each section renders after its summary and body. Sections without
+// an entry (interests) have only the shared shell.
+const extras = {
+  about: AboutExtras,
+  experience: ExperienceExtras,
+  skills: SkillsExtras,
+  projects: WorkExtras,
+  contact: ContactExtras,
+};
+type SectionExtras = (typeof extras)[keyof typeof extras];
+
+function extrasFor(id: ProfileSection['id']): SectionExtras | undefined {
+  return (extras as Partial<Record<ProfileSection['id'], SectionExtras>>)[id];
+}
 
 function paragraphs(body: string): string[] {
   return body.split('\n\n').filter((paragraph) => paragraph.length > 0);
 }
-
-const cvSize: string = getCvSize();
-
-const DownloadIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>`;
-const ArrowIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"></path></svg>`;
-const WhatsAppIcon = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15h-.01a8.22 8.22 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.27 8.23Zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.55.12-.16.25-.63.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.73 2.64 4.19 3.7.59.25 1.05.4 1.4.52.59.19 1.12.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"></path></svg>`;
 ---
 
 <div id="profile" class={styles.panel} tabindex="-1">
   {
     sections.map((section: ProfileSection, index: number) => {
       const next: ProfileSection | undefined = sections[index + 1];
-      const isPlaceholder: boolean = section.shortDescription === 'Placeholder';
+      const Extras: SectionExtras | undefined = extrasFor(section.id);
       return (
         <article
           id={section.id}
           data-section-id={section.id}
-          class:list={[styles.section, isPlaceholder && styles.placeholder]}
+          class={styles.section}
           aria-labelledby={`${section.id}-title`}
         >
           <p class={styles.eyebrow}>{`0${section.stringIndex} · ${section.navLabel}`}</p>
@@ -53,153 +56,7 @@ const WhatsAppIcon = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="
             paragraphs(section.body).map((paragraph) => <p class={styles.body}>{paragraph}</p>)
           )}
 
-          {section.id === 'about' && (
-            <ul class={styles.pills}>
-              {links.map((link) => (
-                <li>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    class={styles.pill}
-                    data-track="social"
-                    data-track-label={link.label}
-                    data-track-location={section.id}
-                  >
-                    {link.label}
-                    <Fragment set:html={ArrowIcon} />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {section.id === 'skills' && (
-            <div class={styles.groups}>
-              {skills.map((group) => (
-                <div>
-                  <h3 class={styles.groupLabel}>{group.label}</h3>
-                  <ul class={styles.list}>
-                    {group.items.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {section.id === 'experience' && (
-            <div>
-              {experience.map((job) => (
-                <section class={styles.job}>
-                  <h3 class={styles.groupLabel}>{job.company}</h3>
-                  <p class={styles.meta}>{job.meta}</p>
-                  {job.roles.map((role) => (
-                    <div class={styles.role}>
-                      <h4 class={styles.roleTitle}>{role.title}</h4>
-                      {role.period && <p class={styles.meta}>{role.period}</p>}
-                      {role.note && <p class={styles.meta}>{role.note}</p>}
-                      {role.points.length > 0 && (
-                        <ul class={styles.list}>
-                          {role.points.map((point) => (
-                            <li>{point}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </section>
-              ))}
-              <h3 class={styles.groupLabel}>Education</h3>
-              {education.map((item) => (
-                <div class={styles.role}>
-                  <h4 class={styles.roleTitle}>{item.school}</h4>
-                  <p class={styles.meta}>{item.credential}</p>
-                  <p class={styles.meta}>{item.period}</p>
-                </div>
-              ))}
-              <h3 class={styles.groupLabel}>Certifications</h3>
-              <ul class={styles.list}>
-                {certifications.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {section.id === 'projects' && (
-            <div>
-              {selectedWork.map((item) => (
-                <section class={styles.job}>
-                  <h3 class={styles.roleTitle}>{item.title}</h3>
-                  <p class={styles.meta}>{item.context}</p>
-                  <ul class={styles.list}>
-                    {item.points.map((point) => (
-                      <li>{point}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
-            </div>
-          )}
-
-          {section.id === 'contact' && (
-            <>
-              <ul class={styles.pills}>
-                {links.map((link) => (
-                  <li>
-                    <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    class={styles.pill}
-                    data-track="social"
-                    data-track-label={link.label}
-                    data-track-location={section.id}
-                  >
-                      {link.label}
-                      <Fragment set:html={ArrowIcon} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href={whatsapp.href}
-                target="_blank"
-                rel="noreferrer"
-                class={styles.contactCard}
-                data-track="lead"
-                data-track-location="contact"
-              >
-                <span class={styles.contactIcon}>
-                  <Fragment set:html={WhatsAppIcon} />
-                </span>
-                <span class={styles.contactText}>
-                  <span class={styles.contactTitle}>{whatsapp.label}</span>
-                  <span class={styles.contactHandle}>@{whatsapp.handle}</span>
-                </span>
-                <Fragment set:html={ArrowIcon} />
-              </a>
-              <a
-                href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${cv.path}`}
-                download={cv.fileName}
-                type="application/pdf"
-                class={styles.contactCard}
-                data-cv-download
-                data-track="cv"
-                data-track-location="contact"
-              >
-                <span class={styles.contactIcon}>
-                  <Fragment set:html={DownloadIcon} />
-                </span>
-                <span class={styles.contactText}>
-                  <span class={styles.contactTitle}>Download my CV</span>
-                  <span class={styles.contactHandle}>{`PDF · ${cvSize} · Updated ${cv.updated}`}</span>
-                </span>
-              </a>
-            </>
-          )}
+          {Extras && <Extras />}
 
           {next && (
             <a class={styles.next} href={`#${next.id}`} data-track="next">

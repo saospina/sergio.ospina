@@ -1,0 +1,29 @@
+---
+import { ArrowIcon } from '../../../shared/icons';
+import { links } from '../profile';
+import styles from '../profile.module.css';
+
+type Props = { location: string };
+const { location } = Astro.props;
+---
+
+<ul class={styles.pills}>
+  {
+    links.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noreferrer"
+          class={styles.pill}
+          data-track="social"
+          data-track-label={link.label}
+          data-track-location={location}
+        >
+          {link.label}
+          <Fragment set:html={ArrowIcon} />
+        </a>
+      </li>
+    ))
+  }
+</ul>

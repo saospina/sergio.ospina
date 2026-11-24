@@ -14,21 +14,24 @@ import StringNav from '../features/interactive-guitar/StringNav.astro';
 import ProfilePanel from '../features/profile/ProfilePanel.astro';
 import { getCvSize } from '../features/profile/cv-file';
 import {
+  currentRole,
   cv,
   description,
   displayName,
   guitarCaption,
   headline,
+  homeLocation,
+  linkedIn,
   links,
   pageTitle,
   tagline,
 } from '../features/profile/profile';
+import SiteNotice from '../features/site-notice/SiteNotice.astro';
+import { BASE, assetUrl } from '../shared/asset-url';
+import { DownloadIcon } from '../shared/icons';
 import styles from '../styles/home.module.css';
 
-const base = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
-const canonical: string = new URL(base, Astro.site).href;
+const canonical: string = new URL(BASE, Astro.site).href;
 const cvSize: string = getCvSize();
 // The photo sits under a 75% dark layer, so moderate quality is invisible.
 // getImage() URLs already include the base path.
@@ -40,15 +43,17 @@ const backgroundStyle: string = [
   `--background-fallback: url('${backgroundWebp.src}')`,
   `--background-image: image-set(url('${backgroundAvif.src}') type('image/avif'), url('${backgroundWebp.src}') type('image/webp'))`,
 ].join('; ');
-const DownloadIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>`;
-const linkedIn: string = links.find((link) => link.label === 'LinkedIn')?.href ?? '';
 const person: string = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: displayName,
-  jobTitle: 'Frontend Tech Lead',
-  worksFor: { '@type': 'Organization', name: 'EPAM Systems' },
-  address: { '@type': 'PostalAddress', addressLocality: 'Medellín', addressCountry: 'CO' },
+  jobTitle: currentRole.title,
+  worksFor: { '@type': 'Organization', name: currentRole.company },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: homeLocation.city,
+    addressCountry: homeLocation.countryCode,
+  },
   url: canonical,
   sameAs: links.map((link) => link.href),
 });
@@ -86,6 +91,7 @@ const person: string = JSON.stringify({
   </head>
   <body>
     <a class={styles.skip} href="#profile">Skip to profile</a>
+    <SiteNotice />
     <main class={styles.page} style={backgroundStyle}>
       <div class={styles.instrument}>
         <Guitar />
@@ -103,7 +109,7 @@ const person: string = JSON.stringify({
             <li>
               <a
                 class={styles.cta}
-                href={`${base}${cv.path}`}
+                href={assetUrl(cv.path)}
                 download={cv.fileName}
                 type="application/pdf"
                 data-cv-download
@@ -117,14 +123,14 @@ const person: string = JSON.stringify({
             </li>
             <li><a
                 class={styles.cta}
-                href={linkedIn}
+                href={linkedIn.href}
                 target="_blank"
                 rel="noreferrer"
                 data-track="social"
-                data-track-label="LinkedIn"
+                data-track-label={linkedIn.label}
                 data-track-location="hero"
               >
-                LinkedIn
+                {linkedIn.label}
               </a></li>
             <li><a class={styles.cta} href="#contact" data-track="cta" data-track-label="contact">Contact</a></li>
           </ul>
@@ -150,7 +156,7 @@ const person: string = JSON.stringify({
         bindGuitarNav({
           playSound: (stringIndex: number): void => {
             void guitarAudio.playString(stringIndex);
-            trackFirstSound();
+            trackFirstSound(guitarAudio.isAudible());
           },
         });
         setActiveSection(getDefaultSection().id);

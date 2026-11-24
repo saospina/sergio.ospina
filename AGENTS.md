@@ -19,9 +19,11 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 ## Architecture
 
 - `src/pages/index.astro` is the only page; it wires three features under `src/features/`:
-  - `interactive-guitar/` — inline SVG guitar, GSAP motion (`guitar-motion.ts`, `guitar-controller.ts`)
+  - `interactive-guitar/` — inline SVG guitar, GSAP motion (`guitar-motion.ts`), links and pluck wiring (`guitar-nav.ts`)
   - `audio-experience/` — Web Audio engine + controls. MP3 samples (`public/audio/guitar/string-N.mp3`) are **not committed** (dir holds only `.gitkeep`), so `SAMPLES_ENABLED` in `sources.ts` is `false` and nothing is fetched; plucks are synthesized (`fallbackFrequency`). Set it to `true` only after adding all six files. Audio must never autoplay and the experience must work without it.
-  - `profile/` — all copy and data live in `profile.ts`; string index → section mapping is `getSectionByStringIndex`.
+  - `profile/` — all copy and data live in `profile.ts` (`currentRole` and `homeLocation` feed the headline and the JSON-LD); string index → section mapping is `getSectionByStringIndex`. `ProfilePanel.astro` renders the shared section shell; per-section content lives in `sections/*Extras.astro`, mapped by section id.
+  - `site-notice/` — the "Under construction" banner at the top of the page (hidden in print).
+- `src/shared/` holds cross-feature helpers: `assetUrl()` / `BASE` (`asset-url.ts`), inline SVG icons (`icons.ts`), and `prefersReducedMotion()` (`motion.ts`). Build public asset URLs with `assetUrl()`.
 - Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
 - `src/assets/home.jpeg` is used only as the darkened full-page background. `index.astro` turns it into AVIF + WebP with `getImage()` and passes `--background-image` / `--background-fallback`. Keep the layout text-first; no photo hero.
 - Fonts are self-hosted with `@fontsource/*` (Latin, 400/500), imported in `index.astro`. Do not add Google Fonts links back.

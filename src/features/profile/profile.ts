@@ -1,5 +1,9 @@
 export const displayName = 'Antonio Ospina';
 
+// Current role and location. The headline and the JSON-LD Person both read these.
+export const currentRole = { title: 'Frontend Tech Lead', company: 'EPAM Systems' } as const;
+export const homeLocation = { city: 'Medellín', country: 'Colombia', countryCode: 'CO' } as const;
+
 export const description =
   'Frontend Tech Lead at EPAM Systems. React, Next.js, and React Native for airline booking and payments.';
 
@@ -24,6 +28,9 @@ export const cv = {
 } as const;
 
 export type ProfileLink = (typeof links)[number];
+
+// The hero CTA links straight to LinkedIn, the first entry in links.
+export const linkedIn: ProfileLink = links[0];
 
 export type ExperienceRole = {
   title: string;
@@ -61,13 +68,12 @@ export type ProfileSection = {
   shortDescription: string;
   body?: string;
   points?: string[];
-  accentColor: string;
   stringIndex: number;
   navLabel: string;
   note: string;
 };
 
-export const headline = 'Frontend Tech Lead · EPAM Systems · Medellín, Colombia';
+export const headline = `${currentRole.title} · ${currentRole.company} · ${homeLocation.city}, ${homeLocation.country}`;
 
 export const pageTitle = 'Antonio Ospina — Frontend Tech Lead (React, Next.js)';
 
@@ -213,10 +219,6 @@ export const certifications = [
   'React: de cero a experto (Hooks y MERN)',
 ];
 
-const ink = '#1c1916';
-const muted = '#5c564e';
-const accent = '#1a4741';
-
 export const sections: ProfileSection[] = [
   {
     id: 'about',
@@ -230,7 +232,6 @@ export const sections: ProfileSection[] = [
       'I started in quality assurance, automating tests and certifying banking systems, and I still build with that bias.',
       'I work in English and Spanish.',
     ],
-    accentColor: accent,
     stringIndex: 1,
   },
   {
@@ -239,7 +240,6 @@ export const sections: ProfileSection[] = [
     navLabel: 'Experience',
     note: 'A2',
     shortDescription: 'Six years at EPAM: QA Engineer, then Frontend Developer, now Frontend Tech Lead.',
-    accentColor: ink,
     stringIndex: 2,
   },
   {
@@ -249,7 +249,6 @@ export const sections: ProfileSection[] = [
     note: 'E2',
     shortDescription: 'React, Next.js, React Native, and TypeScript.',
     body: 'Frontend, quality, and practice.',
-    accentColor: accent,
     stringIndex: 3,
   },
   {
@@ -258,7 +257,6 @@ export const sections: ProfileSection[] = [
     navLabel: 'Work',
     note: 'G3',
     shortDescription: 'What I have shipped and built.',
-    accentColor: muted,
     stringIndex: 4,
   },
   {
@@ -268,7 +266,6 @@ export const sections: ProfileSection[] = [
     note: 'B3',
     shortDescription: 'Why there is a guitar on my résumé.',
     body: 'I play guitar. It is my hobby, so I built this résumé around one: each string opens a section.\n\nThe page is still a résumé first. Everything works without sound, and you can read it top to bottom without touching a string.',
-    accentColor: muted,
     stringIndex: 5,
   },
   {
@@ -278,7 +275,6 @@ export const sections: ProfileSection[] = [
     note: 'E4',
     shortDescription: 'LinkedIn, WhatsApp, GitHub, Medium, or download my CV.',
     body: 'LinkedIn is the best place for roles and introductions. For a quick message, use WhatsApp.',
-    accentColor: accent,
     stringIndex: 6,
   },
 ];

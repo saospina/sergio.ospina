@@ -1,0 +1,19 @@
+---
+import { skills } from '../profile';
+import styles from '../profile.module.css';
+---
+
+<div class={styles.groups}>
+  {
+    skills.map((group) => (
+      <div>
+        <h3 class={styles.groupLabel}>{group.label}</h3>
+        <ul class={styles.list}>
+          {group.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
