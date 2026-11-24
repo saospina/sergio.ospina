@@ -49,13 +49,10 @@ export function trackWebVitals(): void {
 
 let firstSoundSent: boolean = false;
 
-// Reports the first string actually heard (not muted) on this page load.
-export function trackFirstSound(): void {
-  if (firstSoundSent) {
-    return;
-  }
-  const mute: Element | null = document.querySelector('[data-mute]');
-  if (mute?.getAttribute('aria-pressed') === 'true') {
+// Reports the first string actually heard on this page load. The caller
+// passes whether the pluck was audible; analytics does not read the audio UI.
+export function trackFirstSound(audible: boolean): void {
+  if (firstSoundSent || !audible) {
     return;
   }
   firstSoundSent = true;

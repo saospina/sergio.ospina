@@ -1,0 +1,46 @@
+---
+import { assetUrl } from '../../../shared/asset-url';
+import { ArrowIcon, DownloadIcon, WhatsAppIcon } from '../../../shared/icons';
+import { getCvSize } from '../cv-file';
+import { cv, whatsapp } from '../profile';
+import styles from '../profile.module.css';
+import SocialLinks from './SocialLinks.astro';
+---
+
+<>
+  <SocialLinks location="contact" />
+  <a
+    href={whatsapp.href}
+    target="_blank"
+    rel="noreferrer"
+    class={styles.contactCard}
+    data-track="lead"
+    data-track-location="contact"
+  >
+    <span class={styles.contactIcon}>
+      <Fragment set:html={WhatsAppIcon} />
+    </span>
+    <span class={styles.contactText}>
+      <span class={styles.contactTitle}>{whatsapp.label}</span>
+      <span class={styles.contactHandle}>@{whatsapp.handle}</span>
+    </span>
+    <Fragment set:html={ArrowIcon} />
+  </a>
+  <a
+    href={assetUrl(cv.path)}
+    download={cv.fileName}
+    type="application/pdf"
+    class={styles.contactCard}
+    data-cv-download
+    data-track="cv"
+    data-track-location="contact"
+  >
+    <span class={styles.contactIcon}>
+      <Fragment set:html={DownloadIcon} />
+    </span>
+    <span class={styles.contactText}>
+      <span class={styles.contactTitle}>Download my CV</span>
+      <span class={styles.contactHandle}>{`PDF · ${getCvSize()} · Updated ${cv.updated}`}</span>
+    </span>
+  </a>
+</>

@@ -2,9 +2,16 @@ import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import { cv } from './profile';
 
+let cachedSize: string | undefined;
+
 // Server-only: reads the PDF from public/ at build time. Keep Node imports out of profile.ts,
-// which the client script also imports.
+// which the client script also imports. Cached because the hero and Contact both show it.
 export function getCvSize(): string {
+  cachedSize ??= readCvSize();
+  return cachedSize;
+}
+
+function readCvSize(): string {
   const file: string = join(process.cwd(), 'public', cv.path);
   let bytes: number;
   try {

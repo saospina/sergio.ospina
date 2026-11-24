@@ -1,3 +1,5 @@
+import { assetUrl } from '../../shared/asset-url';
+
 export const DEFAULT_VOLUME = 0.6;
 export const STRING_COUNT = 6;
 
@@ -15,7 +17,5 @@ export function fallbackFrequency(stringIndex: number): number | null {
 }
 
 export function stringAudioPath(stringIndex: number): string {
-  const base: string = import.meta.env.BASE_URL;
-  const prefix: string = base.endsWith('/') ? base : `${base}/`;
-  return `${prefix}audio/guitar/string-${stringIndex}.mp3`;
+  return assetUrl(`audio/guitar/string-${stringIndex}.mp3`);
 }

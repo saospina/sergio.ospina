@@ -1,0 +1,43 @@
+---
+import { certifications, education, experience } from '../profile';
+import styles from '../profile.module.css';
+---
+
+<div>
+  {
+    experience.map((job) => (
+      <section class={styles.job}>
+        <h3 class={styles.groupLabel}>{job.company}</h3>
+        <p class={styles.meta}>{job.meta}</p>
+        {job.roles.map((role) => (
+          <div class={styles.role}>
+            <h4 class={styles.roleTitle}>{role.title}</h4>
+            {role.period && <p class={styles.meta}>{role.period}</p>}
+            {role.note && <p class={styles.meta}>{role.note}</p>}
+            {role.points.length > 0 && (
+              <ul class={styles.list}>
+                {role.points.map((point) => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+    ))
+  }
+  <h3 class={styles.groupLabel}>Education</h3>
+  {
+    education.map((item) => (
+      <div class={styles.role}>
+        <h4 class={styles.roleTitle}>{item.school}</h4>
+        <p class={styles.meta}>{item.credential}</p>
+        <p class={styles.meta}>{item.period}</p>
+      </div>
+    ))
+  }
+  <h3 class={styles.groupLabel}>Certifications</h3>
+  <ul class={styles.list}>
+    {certifications.map((item) => <li>{item}</li>)}
+  </ul>
+</div>

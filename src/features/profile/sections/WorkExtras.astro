@@ -1,0 +1,20 @@
+---
+import { selectedWork } from '../profile';
+import styles from '../profile.module.css';
+---
+
+<div>
+  {
+    selectedWork.map((item) => (
+      <section class={styles.job}>
+        <h3 class={styles.roleTitle}>{item.title}</h3>
+        <p class={styles.meta}>{item.context}</p>
+        <ul class={styles.list}>
+          {item.points.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>

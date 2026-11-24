@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from '../../shared/motion';
 import { pluckString } from './guitar-motion';
 
 export type GuitarNavOptions = {
@@ -17,10 +18,6 @@ function stringIndexOf(link: Element): number | null {
   }
   const index: number = Number(raw);
   return Number.isInteger(index) ? index : null;
-}
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 // Restarts the chip's mini-string wobble. The attribute is removed and re-added

@@ -1,10 +1,9 @@
 import gsap from 'gsap';
+import { REDUCED_MOTION_QUERY, prefersReducedMotion } from '../../shared/motion';
 import { stringPath, type GuitarString } from './strings';
 
 export const PLUCK_SECONDS = 0.8;
 export const PLUCK_BEND = 9;
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
 
 type StringMotion = {
   string: GuitarString;
@@ -14,10 +13,6 @@ type StringMotion = {
 
 const motions = new Map<number, StringMotion>();
 let watchingMotion = false;
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia(REDUCED_MOTION).matches;
-}
 
 export function initStringMotion(root: HTMLElement, strings: readonly GuitarString[]): void {
   motions.clear();
@@ -73,7 +68,7 @@ function watchReducedMotion(): void {
     return;
   }
   watchingMotion = true;
-  const media: MediaQueryList = window.matchMedia(REDUCED_MOTION);
+  const media: MediaQueryList = window.matchMedia(REDUCED_MOTION_QUERY);
   media.addEventListener('change', (): void => {
     if (media.matches) {
       resetStrings();
