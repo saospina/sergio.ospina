@@ -31,3 +31,12 @@ Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or ty
 - The CV PDF is `public/cv/antonio-ospina-cv.pdf` (committed; the build fails if it is missing). It must not contain an email or phone number. Bump `cv.updated` in `profile.ts` when the file changes.
 - Keep the existing gtag snippet (`G-V3TGD1L0Z4`).
 - The EPAM Frontend Developer role ends Jan 2026, when Frontend Tech Lead starts. Do not mark both Present.
+
+## Analytics
+
+- GA4 (`G-V3TGD1L0Z4`, free tier). The gtag snippet renders only in production builds (`import.meta.env.PROD`), so `npm run dev` sends nothing.
+- Events go through `track()` in `src/features/analytics/track.ts`, which no-ops when gtag is blocked. Add new event names to its `AnalyticsEvents` type.
+- Clicks are tracked declaratively: add `data-track="lead|cv|social|cta"` plus `data-track-location` / `data-track-label` to an element. One delegated listener (`clicks.ts`, started by `initAnalytics()`) handles them, along with `guitar_pluck` on string links and a one-time `section_view` per section.
+- `section_view` carries `via` (`landing`, `guitar`, `cta`, `next_link`, `scroll`): clicks call `noteNavIntent()` and the next view of that target inherits it. `data-track="next"` on the "Next · string" links exists only for this.
+- `section_read` fires once per section after 8s active with the tab visible. Also sent: `print`, `sound_first_play`, `audio_unavailable`, `exception` (deduped, max 5/page), and `web_vital` (LCP/INP/CLS via `web-vitals`; CLS ×1000).
+- Key events (`generate_lead`, `cv_download`) and custom dimensions are configured in the GA4 admin UI, not in code. Do not re-add a manual `file_download`; Enhanced Measurement already sends it.

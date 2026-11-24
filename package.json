@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "astro": "^5.14.1",
-    "gsap": "^3.15.0"
+    "gsap": "^3.15.0",
+    "web-vitals": "^5.3.0"
   }
 }
