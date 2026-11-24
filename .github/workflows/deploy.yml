@@ -1,7 +1,8 @@
 name: Deploy to GitHub Pages
 
-# Runs on pushes to master, which happen only when a PR is merged. The run uses
-# refs/heads/master, which the github-pages environment's branch policy allows.
+# Deploys only when a PR is merged into master. The trigger is the push the
+# merge creates (refs/heads/master, which the github-pages environment allows),
+# and the merged-pr job stops any push that did not come from a merged PR.
 # Do not switch to pull_request (refs/pull/<n>/merge is rejected) or back to
 # pull_request_target (restricted on public repos from 2026-12-02).
 on:
@@ -18,7 +19,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The Master ruleset already requires PRs; this is the explicit guarantee.
+  merged-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      number: ${{ steps.lookup.outputs.number }}
+    steps:
+      - name: Find the merged PR for this commit
+        id: lookup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          number=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq \
+            "[.[] | select(.merged_at != null and .base.ref == \"master\" and .merge_commit_sha == \"$GITHUB_SHA\") | .number] | first // empty")
+          if ! [[ "$number" =~ ^[0-9]+$ ]]; then
+            number=""
+            echo "::notice::$GITHUB_SHA is not the merge commit of a PR into master; skipping deploy."
+          else
+            echo "Deploying merged PR #$number"
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: merged-pr
+    if: needs.merged-pr.outputs.number != ''
     runs-on: ubuntu-latest
     steps:
       - name: Check out master
