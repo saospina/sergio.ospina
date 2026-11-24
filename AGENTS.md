@@ -1,14 +1,17 @@
 # AGENTS.md
 
-Personal site for Antonio Ospina. One static Astro 5 page. No tests, lint, or typecheck — `npm run build` is the only verification step.
+Personal site for Antonio Ospina. One static Astro 5 page. No unit tests or lint; verify with `npm run check` (typecheck) and `npm run build`.
 
 ## Commands
 
 - `npm run dev` — local server
+- `npm run check` — `astro check` (strict TypeScript, including `.astro` files)
 - `npm run build` — production build; run after every change
 - `npm run preview` — serve `dist/`
 - Deploy (`.github/workflows/deploy.yml`) runs **only when a PR is merged into `master`**. The trigger is the push that the merge creates, and the `merged-pr` job skips any commit that is not a merged PR's `merge_commit_sha` (the `Master` ruleset also requires PRs). No `workflow_dispatch`. Then `build` uploads the Pages artifact and `deploy` publishes it. Keeping them separate avoids a race where `deploy-pages` cannot find the artifact. Uses Node 24 and `npm ci`; keep `package-lock.json` in sync.
-- Do not switch the trigger to `pull_request` (its `refs/pull/<n>/merge` ref is rejected by the `github-pages` environment, which only allows `master`) or back to `pull_request_target` (GitHub restricts it on public repos from 2026-12-02).
+- CI (`.github/workflows/ci.yml`) runs on every PR into `master`: `Typecheck and build` and `Lighthouse` (thresholds and the GA block list in `lighthouserc.json`; reports are a run artifact). Both are required status checks on the `Master` ruleset, so keep those job names stable. `pull_request` is fine there because it never touches Pages.
+- Dependabot (`.github/dependabot.yml`) opens weekly grouped minor/patch PRs for npm and Actions, with a 7-day cooldown; majors come as separate PRs.
+- Do not switch the deploy trigger to `pull_request` (its `refs/pull/<n>/merge` ref is rejected by the `github-pages` environment, which only allows `master`) or back to `pull_request_target` (GitHub restricts it on public repos from 2026-12-02).
 - If only `deploy` fails, use "Re-run failed jobs": it reuses the existing artifact. "Re-run all jobs" uploads a second `github-pages` artifact to the same run and `deploy-pages` then fails with "Multiple artifacts"; delete the old one first (`gh api -X DELETE repos/saospina/sergio.ospina/actions/artifacts/<id>`).
 
 ## Deploy

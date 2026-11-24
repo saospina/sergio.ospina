@@ -1,0 +1,27 @@
+version: 2
+updates:
+  # Minor and patch bumps arrive as one grouped PR a week; majors (e.g. Astro)
+  # get their own PR. The cooldown skips releases younger than a week, which
+  # avoids picking up a compromised or quickly-yanked version.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']
