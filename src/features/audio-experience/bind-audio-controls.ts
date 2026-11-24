@@ -1,3 +1,4 @@
+import { track } from '../analytics/track';
 import type { GuitarAudioEngine } from './types';
 
 const AUDIO_UNAVAILABLE = 'Sound is unavailable. You can still read each section.';
@@ -86,6 +87,7 @@ export function bindAudioControls(root: HTMLElement, engine: GuitarAudioEngine):
     }
     renderMute();
     writeStored({ volume: currentVolume(), muted });
+    track('sound_toggle', { muted });
   }
 
   slider?.addEventListener('input', onVolume);

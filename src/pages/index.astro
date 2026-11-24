@@ -57,13 +57,19 @@ const person: string = JSON.stringify({
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-V3TGD1L0Z4');
-    </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3TGD1L0Z4"></script>
+    {
+      import.meta.env.PROD && (
+        <>
+          <script is:inline>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-V3TGD1L0Z4');
+          </script>
+          <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-V3TGD1L0Z4"></script>
+        </>
+      )
+    }
   </head>
   <body>
     <a class={styles.skip} href="#profile">Skip to profile</a>
@@ -80,7 +86,7 @@ const person: string = JSON.stringify({
           <h1 class={styles.title}>Antonio<br />Ospina</h1>
           <p class={styles.tagline}>{tagline}</p>
           <ul class={styles.ctas}>
-            <li><a class:list={[styles.cta, styles.ctaPrimary]} href="#experience">View experience</a></li>
+            <li><a class:list={[styles.cta, styles.ctaPrimary]} href="#experience" data-track="cta" data-track-label="experience">View experience</a></li>
             <li>
               <a
                 class={styles.cta}
@@ -88,14 +94,26 @@ const person: string = JSON.stringify({
                 download={cv.fileName}
                 type="application/pdf"
                 data-cv-download
+                data-track="cv"
+                data-track-location="hero"
               >
                 <Fragment set:html={DownloadIcon} />
                 {cv.label}
                 <span class={styles.ctaMeta}>PDF · {cvSize}</span>
               </a>
             </li>
-            <li><a class={styles.cta} href={linkedIn} target="_blank" rel="noreferrer">LinkedIn</a></li>
-            <li><a class={styles.cta} href="#contact">Contact</a></li>
+            <li><a
+                class={styles.cta}
+                href={linkedIn}
+                target="_blank"
+                rel="noreferrer"
+                data-track="social"
+                data-track-label="LinkedIn"
+                data-track-location="hero"
+              >
+                LinkedIn
+              </a></li>
+            <li><a class={styles.cta} href="#contact" data-track="cta" data-track-label="contact">Contact</a></li>
           </ul>
         </header>
         <div class={styles.intro}>
@@ -104,6 +122,7 @@ const person: string = JSON.stringify({
       </div>
     </main>
     <script>
+      import { initAnalytics, track, trackFirstSound } from '../features/analytics/bind-analytics';
       import { bindAudioControls } from '../features/audio-experience/bind-audio-controls';
       import { guitarAudio } from '../features/audio-experience/audio-engine';
       import { bindGuitarNav, setActiveSection } from '../features/interactive-guitar/guitar-nav';
@@ -118,6 +137,7 @@ const person: string = JSON.stringify({
         bindGuitarNav({
           playSound: (stringIndex: number): void => {
             void guitarAudio.playString(stringIndex);
+            trackFirstSound();
           },
         });
         setActiveSection(getDefaultSection().id);
@@ -141,18 +161,9 @@ const person: string = JSON.stringify({
         bindAudioControls(controls, guitarAudio);
       }
 
-      // gtag may be missing when an ad blocker drops the analytics script.
-      document.addEventListener('click', (event: MouseEvent): void => {
-        const target: EventTarget | null = event.target;
-        const link: HTMLAnchorElement | null =
-          target instanceof Element ? target.closest<HTMLAnchorElement>('a[data-cv-download]') : null;
-        const gtag: unknown = (window as { gtag?: unknown }).gtag;
-        if (link && typeof gtag === 'function') {
-          gtag('event', 'file_download', {
-            file_name: link.getAttribute('download'),
-            link_url: link.href,
-          });
-        }
+      initAnalytics();
+      guitarAudio.onUnavailable((): void => {
+        track('audio_unavailable', {});
       });
 
       window.addEventListener('pagehide', (event: PageTransitionEvent): void => {
