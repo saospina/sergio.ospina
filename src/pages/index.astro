@@ -1,4 +1,13 @@
 ---
+// Self-hosted fonts: Latin subset, only the two weights the CSS uses.
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/space-grotesk/latin-400.css';
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import { getImage } from 'astro:assets';
+import homeBackground from '../assets/home.jpeg';
 import AudioControls from '../features/audio-experience/AudioControls.astro';
 import Guitar from '../features/interactive-guitar/Guitar.astro';
 import StringNav from '../features/interactive-guitar/StringNav.astro';
@@ -21,6 +30,16 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : `${import.meta.env.BASE_URL}/`;
 const canonical: string = new URL(base, Astro.site).href;
 const cvSize: string = getCvSize();
+// The photo sits under a 75% dark layer, so moderate quality is invisible.
+// getImage() URLs already include the base path.
+const [backgroundAvif, backgroundWebp] = await Promise.all([
+  getImage({ src: homeBackground, format: 'avif', quality: 35 }),
+  getImage({ src: homeBackground, format: 'webp', width: 1440, quality: 45 }),
+]);
+const backgroundStyle: string = [
+  `--background-fallback: url('${backgroundWebp.src}')`,
+  `--background-image: image-set(url('${backgroundAvif.src}') type('image/avif'), url('${backgroundWebp.src}') type('image/webp'))`,
+].join('; ');
 const DownloadIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>`;
 const linkedIn: string = links.find((link) => link.label === 'LinkedIn')?.href ?? '';
 const person: string = JSON.stringify({
@@ -51,12 +70,6 @@ const person: string = JSON.stringify({
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <script type="application/ld+json" set:html={person} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
     {
       import.meta.env.PROD && (
         <>
@@ -73,7 +86,7 @@ const person: string = JSON.stringify({
   </head>
   <body>
     <a class={styles.skip} href="#profile">Skip to profile</a>
-    <main class={styles.page} style={`--background-image: url('${base}img/home.jpeg')`}>
+    <main class={styles.page} style={backgroundStyle}>
       <div class={styles.instrument}>
         <Guitar />
         <p class={styles.caption}>{guitarCaption}</p>
