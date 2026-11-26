@@ -1,6 +1,7 @@
 """PreToolUse (Edit|Write) guards.
 
-- deploy.yml must keep the `pull_request_target` trigger.
+- deploy.yml must keep its `push` trigger and never use `pull_request` or
+  `pull_request_target`.
 - Edits to the guitar/audio features get a reminder to load the
   interactive-guitar-web skill (once per session).
 """
@@ -34,12 +35,14 @@ if rel == ".github/workflows/deploy.yml":
             new = ""
         old_s, new_s = inp.get("old_string", ""), inp.get("new_string", "")
         new = new.replace(old_s, new_s) if inp.get("replace_all") else new.replace(old_s, new_s, 1)
-    if "pull_request_target:" not in new or re.search(r"^\s*pull_request:", new, re.M):
+    has_push = re.search(r"^\s*push:", new, re.M)
+    has_pr = re.search(r"^\s*pull_request(_target)?:", new, re.M)
+    if has_pr or not has_push:
         emit(
             permissionDecision="deny",
-            permissionDecisionReason="deploy.yml must trigger on pull_request_target, not pull_request: "
-            "plain pull_request runs use refs/pull/<n>/merge, which the github-pages environment rejects. "
-            "See AGENTS.md.",
+            permissionDecisionReason="deploy.yml deploys on push to master (the merge commit). Do not switch to "
+            "pull_request (refs/pull/<n>/merge is rejected by the github-pages environment) or "
+            "pull_request_target (restricted on public repos from 2026-12-02). See AGENTS.md.",
         )
 
 if rel.startswith(("src/features/interactive-guitar/", "src/features/audio-experience/")):

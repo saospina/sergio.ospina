@@ -2,3 +2,13 @@ node_modules/
 dist/
 .astro/
 .lighthouseci/
+
+# Editor and OS files
+*.swp
+*.swo
+.*.sw?
+.DS_Store
+
+# Local Codex mirror of .claude/ (hooks.json holds absolute paths)
+.codex/
+.agents/
