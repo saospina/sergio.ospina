@@ -31,6 +31,7 @@ Personal site for Antonio Ospina. One static Astro 7 page (needs Node ≥ 22.23;
 - Landing chrome stays in `src/styles/home.module.css`. Do not add a UI framework.
 - `src/assets/home.jpeg` is used only as the darkened full-page background. `index.astro` turns it into AVIF + WebP with `getImage()` and passes `--background-image` / `--background-fallback`. Keep the layout text-first; no photo hero.
 - Fonts are self-hosted with `@fontsource/*` (Latin, 400/500), imported in `index.astro`. Do not add Google Fonts links back.
+- Agent config: `.claude/` (agents, commands, skills, hooks) is the committed setup and AGENTS.md is the shared source of truth. `.codex/` and `.agents/` are local, git-ignored mirrors; do not commit them.
 - Guitar/audio work follows the repo-local skill `.claude/skills/interactive-guitar-web/SKILL.md`. It sets `disable-model-invocation: true`, so load it explicitly when touching that feature.
 
 ## Content
